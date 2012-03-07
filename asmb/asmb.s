@@ -6,8 +6,8 @@ asmb:
 .LFB0:
 	.cfi_startproc
 	mov %rsi, %rcx		# start our counter with length of array
-start:
 	cmp $0, %rcx
+start:
 	je end
 	dec %rcx
 	rcrq $1, (%rdi, %rcx, 8)
