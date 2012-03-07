@@ -7,7 +7,7 @@ asmb:
 	.cfi_startproc
 	mov %rsi, %rcx		# start our counter with length of array
 start:
-	rcrq $1, (%rdi, %rcx, 8)
+	rcrq $1, (%rdi, %rcx-1, 8)
 	loopz start
 	ret
 	.cfi_endproc
