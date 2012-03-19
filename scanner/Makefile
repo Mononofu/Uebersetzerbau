@@ -1,8 +1,8 @@
-all: lexer.c
-	gcc lexer.c -o lexer
+all: lexer.c lexer.l
+	gcc lexer.c -o scanner -ll
 
 lexer.c: 
-	flex -t lexer.l > lexer.c
-	
+	lex -t lexer.l > lexer.c
+
 clean:
 	rm -f lexer.c lexer

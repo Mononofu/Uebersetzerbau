@@ -1,7 +1,27 @@
+%option noyywrap
+
 hexnumber				[0-9][0-9a-fA-F]+
-decnumber				&[0-9]+
-comment					\(\*.+?\*\)
+decnumber				&([0-9]+)
+comment					\(\*[^\*]+\*\)
+specialchar			[;\(\),:=\*\-\+\#]
+whitespace			[\n\t ]
+identifier			[a-zA-Z_][0-9a-zA-Z_]*
 
 %%
 
-{hexnumber}			printf("num %s", yytext);
+"end"						|
+"return"				|
+"goto"					|
+"if"						|
+"then"					|
+"var"						|
+"not"						|
+"and"						|
+"=<"						|
+{specialchar}		printf("%s\n", yytext);
+{hexnumber}			printf("num %s\n", yytext);
+{decnumber}			printf("num %s\n", yytext+1);
+{identifier}		printf("ident %s\n", yytext);
+{whitespace}		;
+{comment}				;
+.								printf("Lexical error.\n"); exit(1);
