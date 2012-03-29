@@ -2,7 +2,7 @@
 
 hexnumber				[0-9][0-9a-fA-F]+
 decnumber				&([0-9]+)
-comment					\(\*[^\*]+\*\)
+comment					\(\*([^*]|\**[^\*\)])*\*+\)
 specialchar			[;\(\),:=\*\-\+\#]
 whitespace			[\n\t ]
 identifier			[a-zA-Z_][0-9a-zA-Z_]*
