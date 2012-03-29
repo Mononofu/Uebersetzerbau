@@ -18,10 +18,12 @@ identifier			[a-zA-Z_][0-9a-zA-Z_]*
 "not"						|
 "and"						|
 "=<"						|
-{comment}				;
 {specialchar}		printf("%s\n", yytext);
-{hexnumber}			printf("num %s\n", yytext);
-{decnumber}			printf("num %s\n", yytext+1);
+{comment}				;
+{hexnumber}			{ unsigned int hex = 0;
+									sscanf(yytext, "%X", &hex);
+									printf("num %d\n", hex); }
+{decnumber}			printf("num %d\n", atoi(yytext+1));
 {identifier}		printf("ident %s\n", yytext);
 {whitespace}		;
 .								printf("Lexical error.\n"); exit(1);
