@@ -14,6 +14,7 @@
 
 Program: Funcdef ';'
        | Program Program 
+       |
        ;  
  
 Funcdef: ID '(' Pars ')' Stats END  /* Funktionsdefinition */  
