@@ -1,5 +1,5 @@
 all: parser.o lexer.o 
-	gcc -o parser lexer.o parser.o -lfl
+	gcc -o ag lexer.o parser.o -lfl
 
 oxout.y oxout.l: parser.y lexer.l
 	ox parser.y lexer.l
@@ -18,4 +18,4 @@ parser.o: parser.c
 	gcc -c parser.c
 
 clean:
-	rm -f lexer.c parser *.o *.output *.tab.h parser.c oxout.*
+	rm -f lexer.c ag *.o *.output *.tab.h parser.c oxout.*
