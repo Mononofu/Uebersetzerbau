@@ -48,12 +48,24 @@ Lexpr: T_ID        /* schreibender Variablenzugriff */
      ;  
  
 Expr: Unary  
-    | Expr '+' Term  
-    | Expr '*' Term
-    | Expr T_AND Term 
+    | PlusExpr  
+    | MultExpr
+    | AndExpr
     | Term T_LEQ Term 
     | Term '#'  Term 
     ;  
+
+PlusExpr: Term '+' Term
+        | PlusExpr '+' Term
+        ;
+
+MultExpr: Term '*' Term
+        | MultExpr '*' Term
+        ;
+
+AndExpr: Term T_AND Term
+        | AndExpr T_AND Term
+        ;
  
 Unary: T_NOT Unary 
      | '-' Unary
