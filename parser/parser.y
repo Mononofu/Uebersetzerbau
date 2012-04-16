@@ -49,7 +49,7 @@ Expr: Unary
     | Expr '+' Term  
     | Expr '*' Term
     | Expr T_AND Term 
-    | Term '=<' Term 
+    | Term '=' '<' Term 
     | Term '#'  Term 
     ;  
  
