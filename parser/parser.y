@@ -20,15 +20,14 @@ Program: Funcdef ';'
 Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
        ;  
  
-Pars: T_ID                            /* Parameterdefinition */  
-    |
+Pars:                               /* Parameterdefinition */  
+    | T_ID  
     | Pars ',' T_ID ','
     | Pars ',' T_ID 
     ;  
  
-Stats: Labeldef Stat ';' 
-     | Stats Stats
-     |
+Stats: 
+     | Stats Labeldef Stat ';' 
      ;  
  
 Labeldef: T_ID ':'                    /* Labeldefinition */  
