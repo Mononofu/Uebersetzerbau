@@ -1,4 +1,4 @@
-all: lexer.o parser.o
+all: parser.o lexer.o 
 	gcc -o parser lexer.o parser.o -lfl
 
 lexer.c: lexer.l

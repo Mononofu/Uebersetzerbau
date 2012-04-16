@@ -5,7 +5,7 @@
 #include "parser.h"
 %}
 
-%token ID NUM END T_RETURN T_GOTO T_IF T_THEN T_VAR T_NOT T_AND
+%token T_ID T_NUM T_END T_RETURN T_GOTO T_IF T_THEN T_VAR T_NOT T_AND T_LEQ
 %start Program
 
 
@@ -17,32 +17,32 @@ Program: Funcdef ';'
        |
        ;  
  
-Funcdef: ID '(' Pars ')' Stats END  /* Funktionsdefinition */  
+Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
        ;  
  
-Pars: ID                            /* Parameterdefinition */  
+Pars: T_ID                            /* Parameterdefinition */  
     |
-    | Pars ',' ID 
+    | Pars ',' T_ID 
     ;  
  
 Stats: Labeldef Stat ';' 
      | Stats Stats
      ;  
  
-Labeldef: ID ':'                    /* Labeldefinition */  
+Labeldef: T_ID ':'                    /* Labeldefinition */  
         |
-        | ID ':' Labeldef
+        | T_ID ':' Labeldef
         ;  
  
 Stat: T_RETURN Expr  
-    | T_GOTO ID  
-    | T_IF Expr T_THEN Stats END  
-    | T_VAR ID '=' Expr               /* Variablendefinition */  
+    | T_GOTO T_ID  
+    | T_IF Expr T_THEN Stats T_END  
+    | T_VAR T_ID '=' Expr               /* Variablendefinition */  
     | Lexpr '=' Expr                /* Zuweisung */  
     | Term  
     ;  
  
-Lexpr: ID        /* schreibender Variablenzugriff */  
+Lexpr: T_ID        /* schreibender Variablenzugriff */  
      | '*' Unary /* schreibender Speicherzugriff */  
      ;  
  
@@ -50,7 +50,7 @@ Expr: Unary
     | Expr '+' Term  
     | Expr '*' Term
     | Expr T_AND Term 
-    | Term '=' '<' Term 
+    | Term T_LEQ Term 
     | Term '#'  Term 
     ;  
  
@@ -61,9 +61,9 @@ Unary: T_NOT Unary
      ;  
  
 Term: '(' Expr ')'  
-    | NUM  
-    | ID                               /* Variablenverwendung */  
-    | ID '(' Args ')'                  /* Funktionsaufruf */  
+    | T_NUM  
+    | T_ID                               /* Variablenverwendung */  
+    | T_ID '(' Args ')'                  /* Funktionsaufruf */  
     ;
 
 Args:
@@ -80,7 +80,7 @@ int yyerror(char *e)
     exit(2);
 }
 
-int main(voID)
+int main(voT_ID)
 {
     yyparse();
     return 0;

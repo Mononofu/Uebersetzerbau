@@ -1,3 +1,8 @@
+%{
+#include "parser.h"
+#include "parser.tab.h"
+%}
+
 %option noyywrap
 
 hexnumber				[0-9][0-9a-fA-F]+
@@ -9,21 +14,19 @@ identifier			[a-zA-Z_][0-9a-zA-Z_]*
 
 %%
 
-"end"						|
-"return"				|
-"goto"					|
-"if"						|
-"then"					|
-"var"						|
-"not"						|
-"and"						|
-"=<"						|
+"end"						return (T_END);
+"return"				return (T_RETURN);
+"goto"					return (T_GOTO);
+"if"						return (T_IF);
+"then"					return (T_THEN);
+"var"						return (T_VAR);
+"not"						return (T_NOT);
+"and"						return (T_AND);
+"=<"						return (T_LEQ);
 {specialchar}		printf("%s\n", yytext);
 {comment}				;
-{hexnumber}			{ unsigned int hex = 0;
-									sscanf(yytext, "%X", &hex);
-									printf("num %d\n", hex); }
-{decnumber}			printf("num %d\n", atoi(yytext+1));
-{identifier}		printf("ident %s\n", yytext);
+{hexnumber}			return (T_NUM); /* @{ unsigned int hex = 0; sscanf(yytext, "%X", &hex); @T_NUM.val@ = hex; @} */
+{decnumber}			return (T_NUM); /* @{ @T_NUM.val@ = atoi(yytext+1); @} */
+{identifier}		return (T_ID); /* @{ @T_ID.name@ = strdup(yytext); @} */
 {whitespace}		;
 .								printf("Lexical error.\n"); exit(1);
