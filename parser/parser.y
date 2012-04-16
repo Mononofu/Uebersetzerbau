@@ -22,11 +22,13 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
  
 Pars: T_ID                            /* Parameterdefinition */  
     |
+    | Pars ',' T_ID ','
     | Pars ',' T_ID 
     ;  
  
 Stats: Labeldef Stat ';' 
      | Stats Stats
+     |
      ;  
  
 Labeldef: T_ID ':'                    /* Labeldefinition */  
@@ -40,6 +42,7 @@ Stat: T_RETURN Expr
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
     | Lexpr '=' Expr                /* Zuweisung */  
     | Term  
+    |
     ;  
  
 Lexpr: T_ID        /* schreibender Variablenzugriff */  

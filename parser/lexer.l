@@ -23,6 +23,10 @@ identifier			[a-zA-Z_][0-9a-zA-Z_]*
 "not"						return (T_NOT);
 "and"						return (T_AND);
 "=<"						return (T_LEQ);
+";"							return(';');
+"("							return ('(');
+")"							return (')');
+","							return (',');
 {specialchar}		printf("%s\n", yytext);
 {comment}				;
 {hexnumber}			return (T_NUM); /* @{ unsigned int hex = 0; sscanf(yytext, "%X", &hex); @T_NUM.val@ = hex; @} */
