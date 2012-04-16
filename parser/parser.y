@@ -30,9 +30,8 @@ Stats:
      | Stats Labeldef Stat ';' 
      ;  
  
-Labeldef: T_ID ':'                    /* Labeldefinition */  
-        |
-        | T_ID ':' Labeldef
+Labeldef:                   /* Labeldefinition */  
+        | Labeldef T_ID ':' 
         ;  
  
 Stat: T_RETURN Expr  
