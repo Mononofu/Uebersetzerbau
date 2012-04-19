@@ -61,7 +61,7 @@ Stats:
         @i @Stats.out_labels@ = @Stats.in_labels@; 
     @}
 
-     | Stats Labeldef Stat ';' 
+     | Labeldef Stat ';' Stats
     @{
         @i @Labeldef.in@ = @Stats.0.in_labels@;
 
