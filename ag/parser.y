@@ -99,7 +99,7 @@ Stat: T_RETURN Expr
 
     | T_GOTO T_ID  
     @{ 
-        @t check_label(@Stat.in_labels@, @T_ID.name@);
+        @t check_label_exists(@Stat.in_labels@, @T_ID.name@);
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
     @}

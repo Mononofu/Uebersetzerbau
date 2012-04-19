@@ -118,7 +118,7 @@ symbol_t *table_remove_symbol(symbol_t *table, char *identifier) {
   return table;
 }
 
-void check_sym(symbol_t *table, char *id, short type) {
+void check_sym(symbol_t *table, char *id, short type, short ignore_unknown) {
   symbol_t *element=table_lookup(table,id);
 
   if(element!=(symbol_t *)NULL) {
@@ -128,16 +128,21 @@ void check_sym(symbol_t *table, char *id, short type) {
     }
   }
   else {
-    fprintf(stderr,"Unknown identifier %s.\n",id);
-    exit(3);
+    if(!ignore_unknown) {
+      fprintf(stderr,"Unknown identifier %s.\n",id);
+      exit(3);
+    }
   }
 }
 
 void check_variable(symbol_t *table, char *id) {
-  check_sym(table, id, SYMBOL_TYPE_VAR);
+  check_sym(table, id, SYMBOL_TYPE_VAR, 0);
 }
 
 void check_label(symbol_t *table, char *id) {
-  check_sym(table, id, SYMBOL_TYPE_LABEL);
+  check_sym(table, id, SYMBOL_TYPE_LABEL, 1);
 }
 
+void check_label_exists(symbol_t *table, char *id) {
+  check_sym(table, id, SYMBOL_TYPE_LABEL, 0);
+}
