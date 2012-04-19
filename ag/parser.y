@@ -7,6 +7,8 @@
 %token T_ID T_NUM T_END T_RETURN T_GOTO T_IF T_THEN T_VAR T_NOT T_AND T_LEQ
 %start Program
 
+@autoinh symbols
+
 @attributes {int val;} T_NUM
 @attributes {char *name;} T_ID
 
@@ -14,8 +16,7 @@
 %%
 /* rules */
 
-Program: Funcdef ';'
-       | Program Program 
+Program: Program Funcdef ';'
        |
        ;  
  
@@ -89,13 +90,14 @@ Args:
 %%
 /* programs */
 
+extern int yylineno;
 int yyerror(char *e)
 {
-    printf("Parser error: '%s'...\n", e);
+    printf("Parser error: '%s'..., line %d\n", e, yylineno);
     exit(2);
 }
 
-int main(voT_ID)
+int main(void)
 {
     yyparse();
     return 0;

@@ -1,5 +1,4 @@
 %{
-#include "parser.h"
 #include "parser.tab.h"
 %}
 
@@ -8,7 +7,6 @@
 hexnumber				[0-9][0-9a-fA-F]*
 decnumber				&([0-9]+)
 comment					\(\*([^*]|\**[^\*\)])*\*+\)
-specialchar			[;\(\),:=\*\-\+\#]
 whitespace			[\n\t ]
 identifier			[a-zA-Z_][0-9a-zA-Z_]*
 
@@ -33,7 +31,6 @@ identifier			[a-zA-Z_][0-9a-zA-Z_]*
 "="							return ('=');
 "*"							return ('*');
 "#"							return ('#');
-{specialchar}		printf("%s\n", yytext);
 {comment}				;
 {hexnumber}			return (T_NUM); /* @{ unsigned int hex = 0; sscanf(yytext, "%X", &hex); @T_NUM.val@ = hex; @} */
 {decnumber}			return (T_NUM); /* @{ @T_NUM.val@ = atoi(yytext+1); @} */

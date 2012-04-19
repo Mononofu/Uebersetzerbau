@@ -1,8 +1,6 @@
 /* declarations */
 %{
 #include <stdlib.h>
-#include <assert.h>
-#include "parser.h"
 %}
 
 %token T_ID T_NUM T_END T_RETURN T_GOTO T_IF T_THEN T_VAR T_NOT T_AND T_LEQ
@@ -89,9 +87,10 @@ Args:
 %%
 /* programs */
 
+extern int yylineno;
 int yyerror(char *e)
 {
-    printf("Parser error: '%s'...\n", e);
+    printf("Parser error: '%s'..., line %d\n", e, yylineno);
     exit(2);
 }
 
