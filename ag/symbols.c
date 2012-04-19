@@ -135,11 +135,15 @@ void check_sym(symbol_t *table, char *id, short type, short ignore_unknown) {
   }
 }
 
-void check_variable(symbol_t *table, char *id) {
+void check_not_label(symbol_t *table, char *id) {
+  check_sym(table, id, SYMBOL_TYPE_VAR, 1);
+}
+
+void check_variable_exists(symbol_t *table, char *id) {
   check_sym(table, id, SYMBOL_TYPE_VAR, 0);
 }
 
-void check_label(symbol_t *table, char *id) {
+void check_not_variable(symbol_t *table, char *id) {
   check_sym(table, id, SYMBOL_TYPE_LABEL, 1);
 }
 

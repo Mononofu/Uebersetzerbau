@@ -15,7 +15,7 @@
 @attributes { struct symbol_t *vars; } Pars Term Expr AndExpr Lexpr Unary PlusExpr MultExpr Args
 @attributes { struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stats
 @attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stat
-@attributes { struct symbol_t *in; struct symbol_t *out; } Labeldef
+@attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
 @traversal @postorder t
 
@@ -64,6 +64,7 @@ Stats:
      | Labeldef Stat ';' Stats
     @{
         @i @Labeldef.in@ = @Stats.0.in_labels@;
+        @i @Labeldef.vars@ = @Stats.0.vars@;
 
         @i @Stat.in_vars@ = @Stats.0.vars@;
         @i @Stat.in_labels@ = @Labeldef.out@;
@@ -84,9 +85,10 @@ Labeldef:                   /* Labeldefinition */
         | Labeldef T_ID ':' 
         @{
             @i @Labeldef.1.in@ = table_add_symbol(@Labeldef.0.in@, @T_ID.name@, SYMBOL_TYPE_LABEL, 1);
+            @i @Labeldef.1.vars@ = @Labeldef.0.vars@;
             @i @Labeldef.0.out@ = @Labeldef.1.out@;
 
-            @t check_label(@Labeldef.in@, @T_ID.name@);
+            @t check_not_variable(@Labeldef.0.vars@, @T_ID.name@);
         @}
         ;  
  
@@ -120,6 +122,8 @@ Stat: T_RETURN Expr
         @i @Expr.vars@ = @Stat.in_vars@; 
         @i @Stat.out_vars@ = table_add_symbol(@Stat.in_vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
         @i @Stat.out_labels@ = @Stat.in_labels@;
+
+        @t check_not_label(@Stat.in_labels@, @T_ID.name@);
     @}
 
     | Lexpr '=' Expr                /* Zuweisung */  
@@ -145,7 +149,7 @@ Stat: T_RETURN Expr
     ;  
  
 Lexpr: T_ID        /* schreibender Variablenzugriff */  
-     @{ @t check_variable(@Lexpr.vars@, @T_ID.name@); @}
+     @{ @t check_variable_exists(@Lexpr.vars@, @T_ID.name@); @}
 
      | '*' Unary /* schreibender Speicherzugriff */  
      @{ @i @Unary.vars@ = @Lexpr.vars@; @}
@@ -233,7 +237,7 @@ Term: '(' Expr ')'
 
     | T_NUM  
     | T_ID                               /* Variablenverwendung */  
-    @{ @t check_variable(@Term.vars@, @T_ID.name@); @}
+    @{ @t check_variable_exists(@Term.vars@, @T_ID.name@); @}
 
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
     @{ @i @Args.vars@ = @Term.vars@; @} 
