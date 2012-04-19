@@ -13,8 +13,8 @@
 @attributes {char *name;} T_ID
 /* @attributes { struct symbol_t *vars; struct symbol_t *labels; } Funcdef */
 @attributes { struct symbol_t *vars; } Pars Term Expr AndExpr Lexpr Unary PlusExpr MultExpr Args
-@attributes { struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stats
-@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stat
+@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stat
+@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stats
 @attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
 @traversal @postorder t
@@ -29,19 +29,19 @@ Program: Funcdef ';'
  
 Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
         @{ 
-            @i @Stats.vars@ = @Pars.vars@;
+            @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
         @}
 
        | T_ID '(' ')' Stats T_END
         @{ 
-            @i @Stats.vars@ = NULL;
+            @i @Stats.in_vars@ = NULL;
             @i @Stats.in_labels@ = NULL; 
         @}
 
        | T_ID '(' Pars ',' ')' Stats T_END
         @{ 
-            @i @Stats.vars@ = @Pars.vars@;
+            @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
         @}
        ;  
@@ -59,20 +59,23 @@ Pars: T_ID                           /* Parameterdefinition */
 Stats: 
     @{
         @i @Stats.out_labels@ = @Stats.in_labels@; 
+        @i @Stats.out_vars@ = @Stats.in_vars@;
     @}
 
      | Labeldef Stat ';' Stats
     @{
         @i @Labeldef.in@ = @Stats.0.in_labels@;
-        @i @Labeldef.vars@ = @Stats.0.vars@;
+        @i @Labeldef.vars@ = @Stats.0.in_vars@;
 
-        @i @Stat.in_vars@ = @Stats.0.vars@;
+        @i @Stat.in_vars@ = @Stats.0.in_vars@;
         @i @Stat.in_labels@ = @Labeldef.out@;
+        @i @Stat.vars@ = @Stats.0.out_vars@;
 
-        @i @Stats.1.vars@ = @Stat.out_vars@;
+        @i @Stats.1.in_vars@ = @Stat.out_vars@;
         @i @Stats.1.in_labels@ = @Stat.out_labels@;
 
         @i @Stats.0.out_labels@ = @Stats.1.out_labels@;
+        @i @Stats.0.out_vars@ = @Stats.1.out_vars@;
     @}
 
      ;  
@@ -108,9 +111,9 @@ Stat: T_RETURN Expr
 
     | T_IF Expr T_THEN Stats T_END  
     @{
-        @i @Expr.vars@ = @Stat.in_vars@; 
+        @i @Expr.vars@ = @Stat.vars@; 
 
-        @i @Stats.vars@ = clone_table(@Stat.in_vars@);
+        @i @Stats.in_vars@ = clone_table(@Stat.vars@);
         @i @Stats.in_labels@ = @Stat.in_labels@; 
 
         @i @Stat.out_vars@ = @Stat.in_vars@;
@@ -119,7 +122,7 @@ Stat: T_RETURN Expr
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
     @{
-        @i @Expr.vars@ = @Stat.in_vars@; 
+        @i @Expr.vars@ = @Stat.vars@; 
         @i @Stat.out_vars@ = table_add_symbol(@Stat.in_vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
         @i @Stat.out_labels@ = @Stat.in_labels@;
 
@@ -128,15 +131,15 @@ Stat: T_RETURN Expr
 
     | Lexpr '=' Expr                /* Zuweisung */  
     @{
-        @i @Expr.vars@ = @Stat.in_vars@; 
-        @i @Lexpr.vars@ = @Stat.in_vars@;  
+        @i @Expr.vars@ = @Stat.vars@; 
+        @i @Lexpr.vars@ = @Stat.vars@;  
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
     @}
 
     | Term  
     @{
-        @i @Term.vars@ = @Stat.in_vars@;
+        @i @Term.vars@ = @Stat.vars@;
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
     @}
