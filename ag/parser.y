@@ -85,6 +85,8 @@ Labeldef:                   /* Labeldefinition */
         @{
             @i @Labeldef.1.in@ = table_add_symbol(@Labeldef.0.in@, @T_ID.name@, SYMBOL_TYPE_LABEL, 1);
             @i @Labeldef.0.out@ = @Labeldef.1.out@;
+
+            @t check_label(@Labeldef.in@, @T_ID.name@);
         @}
         ;  
  
@@ -106,7 +108,7 @@ Stat: T_RETURN Expr
     @{
         @i @Expr.vars@ = @Stat.in_vars@; 
 
-        @i @Stats.vars@ = @Stat.in_vars@;
+        @i @Stats.vars@ = clone_table(@Stat.in_vars@);
         @i @Stats.in_labels@ = @Stat.in_labels@; 
 
         @i @Stat.out_vars@ = @Stat.in_vars@;
