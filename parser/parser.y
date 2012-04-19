@@ -18,11 +18,11 @@ Program: Funcdef ';'
        ;  
  
 Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
+       | T_ID '(' ')' Stats T_END
+       | T_ID '(' Pars ',' ')' Stats T_END
        ;  
  
-Pars:                               /* Parameterdefinition */  
-    | T_ID  
-    | Pars ',' T_ID ','
+Pars: T_ID                           /* Parameterdefinition */  
     | Pars ',' T_ID 
     ;  
  
