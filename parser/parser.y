@@ -77,6 +77,8 @@ Term: '(' Expr ')'
     | T_NUM  
     | T_ID                               /* Variablenverwendung */  
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
+    | T_ID '(' Args ',' ')' 
+    | T_ID '(' ')' 
     ;
 
 Args:
