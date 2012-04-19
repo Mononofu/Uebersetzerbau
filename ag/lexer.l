@@ -2,7 +2,6 @@
 #include "oxout.tab.h"
 %}
 
-
 %option noyywrap
 
 hexnumber				[0-9][0-9a-fA-F]*

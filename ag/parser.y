@@ -1,7 +1,6 @@
 /* declarations */
 %{
 #include <stdlib.h>
-#include <assert.h>
 %}
 
 %token T_ID T_NUM T_END T_RETURN T_GOTO T_IF T_THEN T_VAR T_NOT T_AND T_LEQ
@@ -12,20 +11,20 @@
 @attributes {int val;} T_NUM
 @attributes {char *name;} T_ID
 
-
 %%
 /* rules */
 
-Program: Program Funcdef ';'
+Program: Funcdef ';'
+       | Program Program 
        |
        ;  
  
 Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
+       | T_ID '(' ')' Stats T_END
+       | T_ID '(' Pars ',' ')' Stats T_END
        ;  
  
-Pars:                               /* Parameterdefinition */  
-    | T_ID  
-    | Pars ',' T_ID ','
+Pars: T_ID                           /* Parameterdefinition */  
     | Pars ',' T_ID 
     ;  
  
@@ -80,6 +79,8 @@ Term: '(' Expr ')'
     | T_NUM  
     | T_ID                               /* Variablenverwendung */  
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
+    | T_ID '(' Args ',' ')' 
+    | T_ID '(' ')' 
     ;
 
 Args:
@@ -97,7 +98,7 @@ int yyerror(char *e)
     exit(2);
 }
 
-int main(void)
+int main(voT_ID)
 {
     yyparse();
     return 0;
