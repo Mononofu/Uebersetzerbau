@@ -3,17 +3,13 @@
 #include <stdio.h>
 #include "symbols.h"
 
-struct symbol_t *new_table(void) {
-  return (struct symbol_t *)NULL;
-}
-
-struct symbol_t *clone_table(struct symbol_t *table) {
-  struct symbol_t *element;
-  struct symbol_t *new_tablex;
+symbol_t *clone_table(symbol_t *table) {
+  symbol_t *element;
+  symbol_t *new_tablex;
 
   element=table;
-  new_tablex=new_table();
-  while((struct symbol_t *)NULL!=element) {
+  new_tablex= NULL;
+  while((symbol_t *)NULL!=element) {
     /* check return value */
     new_tablex=table_add_symbol(new_tablex,element->identifier,element->type,0);
     element=element->next;
@@ -22,11 +18,11 @@ struct symbol_t *clone_table(struct symbol_t *table) {
   return new_tablex;
 }
 
-struct symbol_t *table_add_symbol(struct symbol_t *table, char *identifier, short type, short check) {
-  struct symbol_t *element;
-  struct symbol_t *new_element;
+symbol_t *table_add_symbol(symbol_t *table, char *identifier, short type, short check) {
+  symbol_t *element;
+  symbol_t *new_element;
 
-  if(table_lookup(table,identifier)!=(struct symbol_t *)NULL) {
+  if(table_lookup(table,identifier)!=(symbol_t *)NULL) {
     if(check) {
       fprintf(stderr,"Duplicate field %s.\n",identifier);
       exit(3);
@@ -35,17 +31,17 @@ struct symbol_t *table_add_symbol(struct symbol_t *table, char *identifier, shor
     table=table_remove_symbol(table,identifier);
   }
   
-  new_element=(struct symbol_t *)malloc(sizeof(struct symbol_t));
-  new_element->next=(struct symbol_t *)NULL;
+  new_element=(symbol_t *)malloc(sizeof(symbol_t));
+  new_element->next=(symbol_t *)NULL;
   new_element->identifier=strdup(identifier);
   new_element->type=type;
 
-  if((struct symbol_t *)NULL==table) {
+  if((symbol_t *)NULL==table) {
     return new_element;
   }
   element=table;
 
-  while((struct symbol_t *)NULL!=element->next) {
+  while((symbol_t *)NULL!=element->next) {
     element=element->next;
   }
 
@@ -54,35 +50,35 @@ struct symbol_t *table_add_symbol(struct symbol_t *table, char *identifier, shor
   return table;
 }
 
-struct symbol_t *table_lookup(struct symbol_t *table, char *identifier) {
-  struct symbol_t *element;
+symbol_t *table_lookup(symbol_t *table, char *identifier) {
+  symbol_t *element;
 
   element=table;
 
-  if((struct symbol_t *)NULL==table) {
-    return (struct symbol_t *)NULL;
+  if((symbol_t *)NULL==table) {
+    return (symbol_t *)NULL;
   }
   
   if(strcmp(element->identifier,identifier)==0) {
     return element;
   }
   
-  while((struct symbol_t *)NULL!=element->next) {
+  while((symbol_t *)NULL!=element->next) {
     element=element->next;
     if(strcmp(element->identifier,identifier)==0) {
       return element;
     }
   }
 
-  return (struct symbol_t *)NULL;
+  return (symbol_t *)NULL;
 }
 
-struct symbol_t *table_merge(struct symbol_t *table, struct symbol_t *to_add, short check) {
-  struct symbol_t *element;
-  struct symbol_t *new_table=clone_table(table);
+symbol_t *table_merge(symbol_t *table, symbol_t *to_add, short check) {
+  symbol_t *element;
+  symbol_t *new_table=clone_table(table);
   
   element=to_add;
-  while(element!=(struct symbol_t *)NULL) {
+  while(element!=(symbol_t *)NULL) {
     new_table=table_add_symbol(new_table,element->identifier,element->type,check);
     element=element->next;
   }
@@ -90,21 +86,21 @@ struct symbol_t *table_merge(struct symbol_t *table, struct symbol_t *to_add, sh
   return new_table;
 }
 
-struct symbol_t *table_remove_symbol(struct symbol_t *table, char *identifier) {
-  struct symbol_t *element;
-  struct symbol_t *previous_element;
-  struct symbol_t *new_element;
+symbol_t *table_remove_symbol(symbol_t *table, char *identifier) {
+  symbol_t *element;
+  symbol_t *previous_element;
+  symbol_t *new_element;
 
-  if((struct symbol_t *)NULL==table) {
+  if((symbol_t *)NULL==table) {
     return table;
   }
 
-  previous_element=(struct symbol_t *)NULL;
+  previous_element=(symbol_t *)NULL;
   element=table;
 
-  while((struct symbol_t *)NULL!=element) {
+  while((symbol_t *)NULL!=element) {
     if(strcmp(element->identifier,identifier)==0) {
-      if((struct symbol_t *)NULL==previous_element) {
+      if((symbol_t *)NULL==previous_element) {
         new_element=element->next;
       }
       else {
@@ -122,31 +118,26 @@ struct symbol_t *table_remove_symbol(struct symbol_t *table, char *identifier) {
   return table;
 }
 
-void check_variable(struct symbol_t *table, char *identifier) {
-  struct symbol_t *element=table_lookup(table,identifier);
-  if(element!=(struct symbol_t *)NULL) {
-    if(element->type!=SYMBOL_TYPE_VAR) {
-      fprintf(stderr,"Identifier %s not a variable.\n",identifier);
+void check_sym(symbol_t *table, char *id, short type) {
+  symbol_t *element=table_lookup(table,id);
+
+  if(element!=(symbol_t *)NULL) {
+    if(element->type != type) {
+      fprintf(stderr,"Identifier %s not a variable.\n",id);
       exit(3);
     }
   }
   else {
-    fprintf(stderr,"Unknown identifier %s.\n",identifier);
+    fprintf(stderr,"Unknown identifier %s.\n",id);
     exit(3);
   }
 }
 
-void check_field(struct symbol_t *table, char *identifier) {
-  struct symbol_t *element=table_lookup(table,identifier);
-  if(element!=(struct symbol_t *)NULL) {
-    if(element->type!=SYMBOL_TYPE_FIELD) {
-      fprintf(stderr,"Identifier %s not a variable.\n",identifier);
-      exit(3);
-    }
-  }
-  else {
-    fprintf(stderr,"Unknown identifier %s.\n",identifier);
-    exit(3);
-  }
+void check_variable(symbol_t *table, char *id) {
+  check_sym(table, id, SYMBOL_TYPE_VAR);
+}
+
+void check_label(symbol_t *table, char *id) {
+  check_sym(table, id, SYMBOL_TYPE_LABEL);
 }
 

@@ -1,5 +1,5 @@
 all: parser.o lexer.o symbols.o
-	gcc -ansi -pedantic -o ag lexer.o parser.o -lfl
+	gcc -ansi -pedantic -o ag lexer.o parser.o symbols.o -lfl
 
 oxout.y oxout.l: parser.y lexer.l
 	ox parser.y lexer.l
