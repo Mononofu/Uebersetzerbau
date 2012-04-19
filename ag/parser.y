@@ -48,11 +48,11 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
  
 Pars: T_ID                           /* Parameterdefinition */  
     @{
-        @i @Pars.vars@ = table_add_symbol(NULL, @T_ID.name@, SYMBOL_TYPE_VAR, 0);
+        @i @Pars.vars@ = table_add_symbol(NULL, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
     @}
     | Pars ',' T_ID 
     @{
-        @i @Pars.0.vars@ = table_add_symbol(@Pars.1.vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 0);
+        @i @Pars.0.vars@ = table_add_symbol(@Pars.1.vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
     @}
     ;  
  
