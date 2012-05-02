@@ -97,7 +97,7 @@ Labeldef:                   /* Labeldefinition */
  
 Stat: T_RETURN Expr  
     @{
-        @i @Expr.vars@ = @Stat.in_vars@; 
+        @i @Expr.vars@ = @Stat.vars@; 
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
     @}
