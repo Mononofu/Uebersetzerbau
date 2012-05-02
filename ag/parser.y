@@ -126,7 +126,7 @@ Stat: T_RETURN Expr
         @i @Stat.out_vars@ = table_add_symbol(@Stat.in_vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
         @i @Stat.out_labels@ = @Stat.in_labels@;
 
-        @t check_not_label(@Stat.in_labels@, @T_ID.name@);
+        @t check_not_label(@Stat.labels@, @T_ID.name@);
     @}
 
     | Lexpr '=' Expr                /* Zuweisung */  
