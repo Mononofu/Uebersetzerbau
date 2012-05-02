@@ -13,7 +13,7 @@
 @attributes {char *name;} T_ID
 /* @attributes { struct symbol_t *vars; struct symbol_t *labels; } Funcdef */
 @attributes { struct symbol_t *vars; } Pars Term Expr AndExpr Lexpr Unary PlusExpr MultExpr Args
-@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stat
+@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; } Stat
 @attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; } Stats
 @attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
@@ -70,6 +70,7 @@ Stats:
         @i @Stat.in_vars@ = @Stats.0.in_vars@;
         @i @Stat.in_labels@ = @Labeldef.out@;
         @i @Stat.vars@ = @Stats.0.out_vars@;
+        @i @Stat.labels@ = @Stats.0.out_labels@;
 
         @i @Stats.1.in_vars@ = @Stat.out_vars@;
         @i @Stats.1.in_labels@ = @Stat.out_labels@;
@@ -104,7 +105,7 @@ Stat: T_RETURN Expr
 
     | T_GOTO T_ID  
     @{ 
-        @t check_label_exists(@Stat.in_labels@, @T_ID.name@);
+        @t check_label_exists(@Stat.labels@, @T_ID.name@);
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
     @}
