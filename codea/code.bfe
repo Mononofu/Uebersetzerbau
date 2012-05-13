@@ -39,13 +39,17 @@ expr:    OP_MUL(expr,expr)                # 1 # printf("\timulq %%%s, %%%s\n", b
 expr:    OP_MUL(imm,expr)                 # 2 # printf("\timulq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
 expr:    OP_MUL(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\timulq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
 
-expr:    OP_AND(expr, expr)               # 1 # printf("\and %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
-expr:    OP_AND(imm, expr)                # 2 # printf("\and $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
+expr:    OP_AND(expr, expr)               # 1 # printf("\tand %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
+expr:    OP_AND(imm, expr)                # 2 # printf("\tand $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
 expr:    OP_AND(expr, imm)                # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\tand $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tand $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
 
 expr:    OP_NEQ(expr, expr)               # 2 # printf("\tcmp %%%s, %%%s\n\tsetne %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg);
 expr:    OP_NEQ(imm, expr)                # 2 # printf("\tcmp $%li, %%%s\n\tsetne %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg);
 expr:    OP_NEQ(expr, imm)                # 2 # printf("\tcmp %%%s, $%li\n\tsetne %%%s\n", bnode->kids[0]->reg, bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg);
+
+expr:    OP_LEQ(expr, expr)               # 2 # printf("\tcmp %%%s, %%%s\n\tsetle %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg);
+expr:    OP_LEQ(imm, expr)                # 2 # printf("\tcmp $%li, %%%s\n\tsetle %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg);
+expr:    OP_LEQ(expr, imm)                # 2 # printf("\tcmp %%%s, $%li\n\tsetle %%%s\n", bnode->kids[0]->reg, bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg);
 
 
 call:    OP_Call(OP_ID,exprs)             # 0 # /* ignore at the moment */
