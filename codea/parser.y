@@ -41,6 +41,7 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
+            @codegen ret();
         @}
 
        | T_ID '(' ')' Stats T_END
@@ -50,6 +51,7 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
+            @codegen ret();
         @}
 
        | T_ID '(' Pars ',' ')' Stats T_END
@@ -59,6 +61,7 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
+            @codegen ret();
         @}
        ;  
  
@@ -72,7 +75,8 @@ Pars: T_ID                           /* Parameterdefinition */
         @i @Pars.0.vars@ = table_add_param(@Pars.1.vars@, @T_ID.name@, @Pars.0.num_pars@);
         @i @Pars.0.num_pars@ = @Pars.1.num_pars@ + 1;
     @}
-    ;  
+    ;
+
  
 Stats: 
     @{
