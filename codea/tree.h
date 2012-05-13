@@ -22,6 +22,7 @@ enum {
   /* arithmetic */
   OP_ADD,
   OP_MUL,
+  OP_NEG,
 
   /* various */
   OP_ID,
@@ -53,6 +54,7 @@ static char rule_names[100][100]={
   /* arithmetic */
   "OP_ADD",
   "OP_MUL",
+  "OP_NEG",
 
   /* various */
   "OP_ID",

@@ -19,7 +19,7 @@
 %}
 
 %start stat
-%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_ID=12 OP_Number=13 OP_Field=14 OP_Return=15 OP_Zero=16 OP_One=17 OP_Args=18 OP_Call=19 OP_ReadMem=20
+%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_NEG=12 OP_ID=13 OP_Number=14 OP_Field=15 OP_Return=16 OP_Zero=17 OP_One=18 OP_Args=19 OP_Call=20 OP_ReadMem=21
 
 %%
 
@@ -30,6 +30,10 @@ ret:     OP_Return(expr)                  # 1 # move(bnode->reg, "rax"); ret();
 expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) move(get_param_reg(bnode->param_index), bnode->reg);
 expr:    imm                              # 1 # printf("\tmovq $%li, %%%s\n", bnode->value, bnode->reg);
 expr:    call                             # 0 #
+
+expr:    OP_NOT(expr)                     # 1 # printf("\tnot %%%s\n", bnode->reg);
+
+expr:    OP_NEG(expr)                     # 1 # printf("\tneg %%%s\n", bnode->reg);
 
 expr:    OP_ADD(expr,expr)                # 1 # printf("\taddq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
 expr:    OP_ADD(imm,expr)                 # 2 # printf("\taddq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
@@ -69,6 +73,8 @@ zexpr:    OP_Field(zexpr,OP_ID)           # 0 #
 zexpr:    OP_ID                           # 0 #
 
 imm:    zero                              # 0 #
+imm:    OP_NEG(imm)                       # 0 # bnode->value= - (bnode->kids[0]->value);
+imm:    OP_NOT(imm)                       # 0 # bnode->value= ~ (bnode->kids[0]->value);
 imm:    OP_ADD(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value+bnode->kids[1]->value;
 imm:    OP_MUL(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value*bnode->kids[1]->value;
 imm:    OP_Number                         # 0 # 
