@@ -165,12 +165,30 @@ void check_sym(symbol_t *table, char *id, short type, short ignore_unknown) {
   }
 }
 
-void check_not_label(symbol_t *table, char *id) {
-  check_sym(table, id, SYMBOL_TYPE_VAR, 1);
+void check_variable_exists(symbol_t *table, char *id) {
+  symbol_t *element=table_lookup(table, id);
+
+  if(element!=(symbol_t *)NULL) {
+    if(element->type != SYMBOL_TYPE_VAR && element->type != SYMBOL_TYPE_PARAM) {
+      fprintf(stderr,"Identifier %s not a variable.\n",id);
+      exit(3);
+    }
+  }
+  else {
+    fprintf(stderr,"Unknown identifier %s.\n",id);
+    exit(3);
+  }
 }
 
-void check_variable_exists(symbol_t *table, char *id) {
-  check_sym(table, id, SYMBOL_TYPE_VAR, 0);
+void check_not_label(symbol_t *table, char *id) {
+  symbol_t *element=table_lookup(table, id);
+
+  if(element!=(symbol_t *)NULL) {
+    if(element->type == SYMBOL_TYPE_LABEL) {
+      fprintf(stderr,"Identifier %s not a variable.\n",id);
+      exit(3);
+    }
+  }
 }
 
 void check_not_variable(symbol_t *table, char *id) {
