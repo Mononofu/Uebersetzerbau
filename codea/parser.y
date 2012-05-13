@@ -347,7 +347,7 @@ Unary: T_NOT Unary
             @i @Unary.1.vars@ = @Unary.0.vars@; 
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
-            @i @Unary.0.node@ = new_node(OP_NOT, @Unary.1.node@, (treenode *) NULL);
+            @i @Unary.0.node@ = new_node(OP_NEG, @Unary.1.node@, (treenode *) NULL);
         @}
 
      | '*' Unary   /* lesender Speicherzugriff */  
