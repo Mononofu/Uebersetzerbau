@@ -291,6 +291,8 @@ MultExpr: Term '*' Term
 
             @i @MultExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @MultExpr.node@ = new_node(OP_MUL, @Term.0.node@, @Term.1.node@);
+
+            @reg @Term.0.node@->reg = @MultExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@MultExpr.node@->reg, @MultExpr.node@->skip_reg);
          @}
 
         | MultExpr '*' Term
@@ -300,6 +302,8 @@ MultExpr: Term '*' Term
 
             @i @MultExpr.0.immediate@ = @MultExpr.1.immediate@ && @Term.immediate@;
             @i @MultExpr.0.node@ = new_node(OP_MUL, @MultExpr.1.node@, @Term.node@);
+
+            @reg @Term.node@->reg = @MultExpr.0.node@->reg; @MultExpr.1.node@->reg = get_next_reg(@MultExpr.0.node@->reg, @MultExpr.node@->skip_reg);
          @}
         ;
 
@@ -310,6 +314,8 @@ AndExpr: Term T_AND Term
 
             @i @AndExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @AndExpr.node@ = new_node(OP_AND, @Term.0.node@, @Term.1.node@);
+
+            @reg @Term.0.node@->reg = @AndExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@AndExpr.node@->reg, @AndExpr.node@->skip_reg);
         @} 
 
         | AndExpr T_AND Term
@@ -319,6 +325,8 @@ AndExpr: Term T_AND Term
 
             @i @AndExpr.0.immediate@ = @AndExpr.1.immediate@ && @Term.immediate@;
             @i @AndExpr.0.node@ = new_node(OP_AND, @AndExpr.1.node@, @Term.node@);
+
+            @reg @Term.node@->reg = @AndExpr.0.node@->reg; @AndExpr.1.node@->reg = get_next_reg(@AndExpr.0.node@->reg, @AndExpr.node@->skip_reg);            
         @} 
         ;
  
