@@ -4,6 +4,7 @@
 
 
 void function_header(char *name) {
+  printf("\tmovq $0, %%rax\n");
   printf("\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 }
 
