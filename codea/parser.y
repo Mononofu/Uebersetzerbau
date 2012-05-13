@@ -340,6 +340,8 @@ Unary: T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = new_node(OP_NOT, @Unary.1.node@, (treenode *) NULL);
+
+            @reg @Unary.1.node@->reg = @Unary.0.node@->reg
         @}
 
      | '-' Unary
@@ -348,6 +350,8 @@ Unary: T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = new_node(OP_NEG, @Unary.1.node@, (treenode *) NULL);
+
+            @reg @Unary.1.node@->reg = @Unary.0.node@->reg
         @}
 
      | '*' Unary   /* lesender Speicherzugriff */  
@@ -356,6 +360,8 @@ Unary: T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = new_node(OP_ReadMem, @Unary.1.node@, (treenode *) NULL);
+
+            @reg @Unary.1.node@->reg = @Unary.0.node@->reg
         @}
 
      | Term 
@@ -364,6 +370,8 @@ Unary: T_NOT Unary
 
         @i @Unary.node@ = @Term.node@;
         @i @Unary.immediate@ = @Term.immediate@;
+
+        @reg @Term.node@->reg = @Unary.node@->reg
     @} 
      ;  
  
