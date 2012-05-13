@@ -16,8 +16,6 @@
 /* zero:    OP_Negation(zero)                # 0 # */
 /* zexpr:    OP_Negation(zexpr)              # 0 # */
 /* imm:    OP_Negation(imm)                  # 0 # bnode->value=-bnode->kids[0]->value; */
-
-/*  move(get_param_reg(bnode->param_index), bnode->reg); */
 %}
 
 %start stat
@@ -29,7 +27,7 @@ stat:    ret                              # 0 #
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->reg, "rax"); ret(); 
 
-expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) bnode->reg = get_param_reg(bnode->param_index); 
+expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) move(get_param_reg(bnode->param_index), bnode->reg);
 expr:    imm                              # 1 # printf("\tmovq $%li, %%%s\n", bnode->value, bnode->reg);
 expr:    call                             # 0 #
 
