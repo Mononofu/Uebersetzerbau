@@ -5,7 +5,6 @@
 
 void function_header(char *name) {
   printf("\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
-  printf("\tmovq $0, %%rax\n");
 }
 
 char *get_next_reg(char *name, int skip_reg) {
@@ -67,6 +66,10 @@ char *get_8bit_reg(char* reg) {
 
 void ret(void) {
   printf("\tret\n");
+}
+
+void imm_ret(void) {
+  printf("\tmovq $0, %%rax\n\tret\n");
 }
 
 void move(char *src, char *dst) {

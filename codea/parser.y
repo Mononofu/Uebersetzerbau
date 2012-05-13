@@ -34,14 +34,26 @@ Program: Program Funcdef ';'
        |
        ;  
  
-Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
+Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without body */
+        @{
+            @codegen function_header(@T_ID.name@); imm_ret();
+        @}
+       | T_ID '(' Pars ',' ')' T_END
+        @{ 
+            @codegen function_header(@T_ID.name@); imm_ret();
+        @}
+       | T_ID '(' ')' T_END
+        @{ 
+            @codegen function_header(@T_ID.name@); imm_ret();
+        @}
+
+       |T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
         @{ 
             @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
-            @codegen ret();
         @}
 
        | T_ID '(' ')' Stats T_END
@@ -51,7 +63,6 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
-            @codegen ret();
         @}
 
        | T_ID '(' Pars ',' ')' Stats T_END
@@ -61,7 +72,6 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
             @i @Stats.labels@ = @Stats.out_labels@; 
 
             @codegen @revorder(1) function_header(@T_ID.name@);
-            @codegen ret();
         @}
        ;  
  
