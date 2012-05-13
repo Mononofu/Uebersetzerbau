@@ -209,6 +209,8 @@ Expr: Unary
         @i @Unary.vars@ = @Expr.vars@; 
         @i @Expr.node@ = @Unary.node@;
         @i @Expr.immediate@ = @Unary.immediate@;
+
+        @reg @Unary.node@->reg = @Expr.node@->reg;
     @}
 
     | PlusExpr  
@@ -216,6 +218,8 @@ Expr: Unary
         @i @PlusExpr.vars@ = @Expr.vars@; 
         @i @Expr.node@ = @PlusExpr.node@;
         @i @Expr.immediate@ = @PlusExpr.immediate@;
+
+        @reg @PlusExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | MultExpr
@@ -223,6 +227,8 @@ Expr: Unary
         @i @MultExpr.vars@ = @Expr.vars@;
         @i @Expr.node@ = @MultExpr.node@;
         @i @Expr.immediate@ = @MultExpr.immediate@;
+
+        @reg @MultExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | AndExpr
@@ -230,6 +236,8 @@ Expr: Unary
         @i @AndExpr.vars@ = @Expr.vars@;
         @i @Expr.node@ = @AndExpr.node@;
         @i @Expr.immediate@ = @AndExpr.immediate@;
+
+        @reg @AndExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | Term T_LEQ Term 
@@ -258,6 +266,8 @@ PlusExpr: Term '+' Term
 
             @i @PlusExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @PlusExpr.node@ = new_node(OP_ADD, @Term.0.node@, @Term.1.node@);
+
+            @reg @Term.0.node@->reg = @PlusExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@PlusExpr.node@->reg, @PlusExpr.node@->skip_reg);
          @}
 
         | PlusExpr '+' Term
@@ -267,6 +277,8 @@ PlusExpr: Term '+' Term
 
             @i @PlusExpr.0.immediate@ = @PlusExpr.1.immediate@ && @Term.immediate@;
             @i @PlusExpr.0.node@ = new_node(OP_ADD, @PlusExpr.1.node@, @Term.node@);
+
+            @reg @Term.node@->reg = @PlusExpr.0.node@->reg; @PlusExpr.1.node@->reg = get_next_reg(@PlusExpr.0.node@->reg, @PlusExpr.node@->skip_reg);
          @}
         ;
 
@@ -381,7 +393,8 @@ Term: '(' Expr ')'
 
     | T_ID '(' ')' 
     @{
-        @i @Term.immediate@ = 0;@i @Term.node@ = new_node(OP_Call, new_named_leaf(OP_ID, @T_ID.name@), NULL);
+        @i @Term.immediate@ = 0;
+        @i @Term.node@ = new_node(OP_Call, new_named_leaf(OP_ID, @T_ID.name@), NULL);
     @}
     ;
 
