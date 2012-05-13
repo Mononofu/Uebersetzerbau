@@ -57,6 +57,8 @@ expr:    OP_LEQ(expr, expr)               # 3 # printf("\tcmpq %%%s, %%%s\n\tmov
 expr:    OP_LEQ(imm, expr)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetle %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg, get_8bit_reg(bnode->reg));
 expr:    OP_LEQ(expr, imm)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetle %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
 
+expr:    OP_ReadMem(expr)                 # 1 # printf("\tmovq (%%%s), %%%s\n", bnode->kids[0]->reg, bnode->reg);
+
 
 call:    OP_Call(OP_ID,exprs)             # 0 # /* ignore at the moment */
 
