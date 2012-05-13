@@ -348,7 +348,7 @@ Unary: T_NOT Unary
             @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
-     | T_NOT Unary 
+     | T_NOT T_NOT Unary 
         @{ 
             @i @Unary.1.vars@ = @Unary.0.vars@; 
 
