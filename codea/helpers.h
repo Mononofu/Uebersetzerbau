@@ -1,7 +1,7 @@
 #ifndef _HELPERS_H_
 #define _HELPERS_H_
 
-#define DEBUG
+#define DEBUG_ME
 
 void function_header(char *name);
 char *get_next_reg(char *name, int skip_reg);
