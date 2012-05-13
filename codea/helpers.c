@@ -4,8 +4,8 @@
 
 
 void function_header(char *name) {
-  printf("\tmovq $0, %%rax\n");
   printf("\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
+  printf("\tmovq $0, %%rax\n");
 }
 
 char *get_next_reg(char *name, int skip_reg) {
