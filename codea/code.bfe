@@ -25,17 +25,17 @@
 
 stat:    ret                              # 0 #
 
-ret:     OP_Return(expr)                   # 1 # move(bnode->reg, "rax"); ret(); 
+ret:     OP_Return(expr)                  # 1 # move(bnode->reg, "rax"); ret(); 
 
 expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) move(get_param_reg(bnode->param_index), bnode->reg);
 expr:    imm                              # 1 # printf("\tmovq $%li, %%%s\n", bnode->value, bnode->reg);
 expr:    call                             # 0 #
-expr:    OP_ADD(expr,expr)           # 1 # printf("\taddq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
-expr:    OP_ADD(imm,expr)            # 1 # printf("\taddq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
-expr:    OP_ADD(expr,imm)            # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\taddq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
-expr:    OP_MUL(expr,expr)     # 1 # printf("\timulq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
-expr:    OP_MUL(imm,expr)      # 1 # printf("\timulq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
-expr:    OP_MUL(expr,imm)      # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\timulq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
+expr:    OP_ADD(expr,expr)                # 1 # printf("\taddq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
+expr:    OP_ADD(imm,expr)                 # 1 # printf("\taddq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
+expr:    OP_ADD(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\taddq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
+expr:    OP_MUL(expr,expr)                # 1 # printf("\timulq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
+expr:    OP_MUL(imm,expr)                 # 1 # printf("\timulq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
+expr:    OP_MUL(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\timulq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
 expr:    OP_Field(expr,OP_ID)             # 2 # printf("\tmovq %li(%%%s), %%%s\n", 8*bnode->value, bnode->kids[0]->reg, bnode->reg);
 expr:    OP_Field(imm,OP_ID)              # 1 # printf("\tmovq %li, %%%s\n", bnode->kids[0]->value+bnode->value*8, bnode->reg);
 
@@ -45,19 +45,19 @@ exprs:    expr                            # 0 #
 exprs:    OP_Args(exprs,expr)             # 0 #
 
 zero:    OP_Zero                          # 0 #
-zero:    OP_MUL(zexpr,zero)    # 0 #
-zero:    OP_MUL(zero,zexpr)    # 0 #
+zero:    OP_MUL(zexpr,zero)               # 0 #
+zero:    OP_MUL(zero,zexpr)               # 0 #
 
 zexpr:    zero                            # 0 #
 zexpr:    imm                             # 0 #
-zexpr:    OP_ADD(zexpr,zexpr)        # 0 #
-zexpr:    OP_MUL(zexpr,zexpr)  # 0 #
+zexpr:    OP_ADD(zexpr,zexpr)             # 0 #
+zexpr:    OP_MUL(zexpr,zexpr)             # 0 #
 zexpr:    OP_Field(zexpr,OP_ID)           # 0 #
 zexpr:    OP_ID                           # 0 #
 
 imm:    zero                              # 0 #
-imm:    OP_ADD(imm,imm)              # 0 # bnode->value=bnode->kids[0]->value+bnode->kids[1]->value;
-imm:    OP_MUL(imm,imm)        # 0 # bnode->value=bnode->kids[0]->value*bnode->kids[1]->value;
+imm:    OP_ADD(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value+bnode->kids[1]->value;
+imm:    OP_MUL(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value*bnode->kids[1]->value;
 imm:    OP_Number                         # 0 # 
 imm:    OP_Zero                           # 0 # 
 imm:    OP_One                            # 0 # 

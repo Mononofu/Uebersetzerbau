@@ -21,6 +21,7 @@
 
 @traversal @postorder check
 @traversal @postorder codegen
+@traversal @preorder reg
 
 %%
 /* rules */
@@ -122,6 +123,8 @@ Stat: T_RETURN Expr
         @i @Stat.out_labels@ = @Stat.in_labels@;
 
         @i @Stat.node@ = new_node(OP_Return, @Expr.node@, (treenode *)NULL);
+        
+        @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
     @}
 
     | T_GOTO T_ID  
