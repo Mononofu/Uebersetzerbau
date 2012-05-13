@@ -13,7 +13,7 @@
 @attributes {long val;} T_NUM
 @attributes {char *name;} T_ID
 /* @attributes { struct symbol_t *vars; struct symbol_t *labels; } Funcdef */
-@attributes { struct symbol_t *vars; } Pars
+@attributes { struct symbol_t *vars; int num_pars; } Pars
 @attributes { struct symbol_t *vars; struct treenode* node; int immediate; } Term Expr AndExpr Lexpr Unary PlusExpr MultExpr  Args
 @attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; struct treenode* node; } Stat
 @attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; } Stats
@@ -64,11 +64,13 @@ Funcdef: T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */
  
 Pars: T_ID                           /* Parameterdefinition */  
     @{
-        @i @Pars.vars@ = table_add_symbol(NULL, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
+        @i @Pars.vars@ = table_add_param(NULL, @T_ID.name@, 1);
+        @i @Pars.num_pars@ = 1;
     @}
     | Pars ',' T_ID 
     @{
-        @i @Pars.0.vars@ = table_add_symbol(@Pars.1.vars@, @T_ID.name@, SYMBOL_TYPE_VAR, 1);
+        @i @Pars.0.vars@ = table_add_param(@Pars.1.vars@, @T_ID.name@, @Pars.0.num_pars@);
+        @i @Pars.0.num_pars@ = @Pars.1.num_pars@ + 1;
     @}
     ;  
  

@@ -50,6 +50,36 @@ symbol_t *table_add_symbol(symbol_t *table, char *identifier, short type, short 
   return table;
 }
 
+
+struct symbol_t *table_add_param(struct symbol_t *table, char *identifier, int param_index) {
+  struct symbol_t *element;
+  struct symbol_t *new_element;
+
+  if(table_lookup(table,identifier)!=(struct symbol_t *)NULL) {
+    table=table_remove_symbol(table,identifier);
+  }
+  
+  new_element=(struct symbol_t *)malloc(sizeof(struct symbol_t));
+  new_element->next=(struct symbol_t *)NULL;
+  new_element->identifier=strdup(identifier);
+  new_element->type=SYMBOL_TYPE_PARAM;
+  new_element->param_index=param_index;
+
+  if((struct symbol_t *)NULL==table) {
+    return new_element;
+  }
+  element=table;
+
+  while((struct symbol_t *)NULL!=element->next) {
+    element=element->next;
+  }
+
+  element->next=new_element;
+  
+  return table;
+}
+
+
 symbol_t *table_lookup(symbol_t *table, char *identifier) {
   symbol_t *element;
 

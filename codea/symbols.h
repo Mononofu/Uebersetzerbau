@@ -3,6 +3,7 @@
 
 #define SYMBOL_TYPE_LABEL 1
 #define SYMBOL_TYPE_VAR 2
+#define SYMBOL_TYPE_PARAM 3
 
 struct symbol_t {
   char *identifier;
@@ -18,6 +19,7 @@ typedef struct symbol_t symbol_t;
 symbol_t *clone_table(symbol_t *table);
 symbol_t *new_table(void);
 symbol_t *table_add_symbol(symbol_t *table, char *identifier, short type, short check);
+symbol_t *table_add_param(symbol_t *table, char *identifier, int param_index);
 symbol_t *table_lookup(symbol_t *table, char *identifier);
 symbol_t *table_remove_symbol(symbol_t *table, char *identifier);
 symbol_t *table_merge(symbol_t *table, symbol_t *to_add, short check);
