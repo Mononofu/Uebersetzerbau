@@ -27,6 +27,9 @@ char *get_next_reg(char *name, int skip_reg) {
 }
 
 char *get_param_reg(long number) {
+  if(number == 0)
+    printf("trying to acces negative param reg: %d", number);
+  
   char *reg_names[]={"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
   return reg_names[number-1];
 }
@@ -38,6 +41,7 @@ void ret(void) {
 void move(char *src, char *dst) {
   if(src == NULL || dst == NULL)
     printf("null register! src: %d, dst: %d", src, dst);
+
   if(strcmp(src,dst)) {
     printf("\tmovq %%%s, %%%s\n",src,dst);
   }
