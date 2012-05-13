@@ -32,8 +32,10 @@ expr:    imm                              # 1 # printf("\tmovq $%li, %%%s\n", bn
 expr:    call                             # 0 #
 
 expr:    OP_NOT(expr)                     # 1 # printf("\tnot %%%s\n", bnode->reg);
+expr:    OP_NOT(OP_NOT(expr))             # 0 #
 
 expr:    OP_NEG(expr)                     # 1 # printf("\tneg %%%s\n", bnode->reg);
+expr:    OP_NEG(OP_NEG(expr))             # 0 # 
 
 expr:    OP_ADD(expr,expr)                # 1 # printf("\taddq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
 expr:    OP_ADD(imm,expr)                 # 2 # printf("\taddq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
