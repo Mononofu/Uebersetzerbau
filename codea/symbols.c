@@ -56,7 +56,8 @@ struct symbol_t *table_add_param(struct symbol_t *table, char *identifier, int p
   struct symbol_t *new_element;
 
   if(table_lookup(table,identifier)!=(struct symbol_t *)NULL) {
-    table=table_remove_symbol(table,identifier);
+    fprintf(stderr,"Duplicate parameter %s.\n",identifier);
+    exit(3);
   }
   
   new_element=(struct symbol_t *)malloc(sizeof(struct symbol_t));
