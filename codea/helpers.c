@@ -36,6 +36,8 @@ void ret(void) {
 }
 
 void move(char *src, char *dst) {
+  if(src == NULL || dst == NULL)
+    printf("null register! src: %d, dst: %d", src, dst);
   if(strcmp(src,dst)) {
     printf("\tmovq %%%s, %%%s\n",src,dst);
   }
