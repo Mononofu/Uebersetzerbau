@@ -4,7 +4,7 @@
 
 
 void function_header(char *name) {
-  printf("\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
+  printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 }
 
 char *get_next_reg(char *name, int skip_reg) {

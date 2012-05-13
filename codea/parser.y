@@ -331,7 +331,7 @@ AndExpr: Term T_AND Term
             @i @Term.1.vars@ = @AndExpr.vars@;
 
             @i @AndExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
-            @i @AndExpr.node@ = new_node(OP_AND, @Term.0.node@, @Term.1.node@);
+            @i @AndExpr.node@ = (@Term.0.node@->op == T_ID && @Term.1.node@->op == T_ID && strcmp(@Term.0.node@->name, @Term.1.node@->name) == 0) ? @Term.0.node@ : new_node(OP_AND, @Term.0.node@, @Term.1.node@);
 
             @reg @Term.0.node@->reg = @AndExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@AndExpr.node@->reg, @AndExpr.node@->skip_reg);
         @} 
