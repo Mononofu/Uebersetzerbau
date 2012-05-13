@@ -39,23 +39,23 @@ char *get_param_reg(long number) {
 }
 
 char *get_8bit_reg(char* reg) {
-  if(strcmp(reg, "rax")) {
+  if(strcmp(reg, "rax") == 0) {
     return "al";
-  } else if(strcmp(reg, "r10")) {
+  } else if(strcmp(reg, "r10") == 0) {
     return "r10b";
-  } else if(strcmp(reg, "r11")) {
+  } else if(strcmp(reg, "r11") == 0) {
     return "r11b";
-  } else if(strcmp(reg, "r9")) {
+  } else if(strcmp(reg, "r9") == 0) {
     return "r9b";
-  } else if(strcmp(reg, "r8")) {
+  } else if(strcmp(reg, "r8") == 0) {
     return "r8b";
-  } else if(strcmp(reg, "rcx")) {
+  } else if(strcmp(reg, "rcx") == 0) {
     return "cl";
-  } else if(strcmp(reg, "rdx")) {
+  } else if(strcmp(reg, "rdx") == 0) {
     return "dl";
-  } else if(strcmp(reg, "rsi")) {
+  } else if(strcmp(reg, "rsi") == 0) {
     return "sil";
-  } else if(strcmp(reg, "rdi")) {
+  } else if(strcmp(reg, "rdi") == 0) {
     return "dil";
   } else {
     printf("unknown register %s", reg);
