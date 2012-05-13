@@ -20,9 +20,8 @@
 @attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
 @traversal @postorder check
-@traversal @postorder codegen
 @traversal @preorder reg
-
+@traversal @postorder codegen
 %%
 /* rules */
 
