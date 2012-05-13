@@ -61,6 +61,7 @@ char *get_8bit_reg(char* reg) {
     printf("unknown register %s", reg);
     exit(4);
   }
+  return "";
 }
 
 void ret(void) {

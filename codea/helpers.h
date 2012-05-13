@@ -8,6 +8,7 @@ char *get_next_reg(char *name, int skip_reg);
 char *get_param_reg(long number);
 void ret(void);
 void move(char *src, char *dst);
+char *get_8bit_reg(char* reg);
 
 
 #endif
