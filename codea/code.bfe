@@ -40,6 +40,8 @@ expr:    OP_NEG(OP_NEG(expr))             # 0 #
 expr:    OP_ADD(expr,expr)                # 1 # printf("\taddq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
 expr:    OP_ADD(imm,expr)                 # 2 # printf("\taddq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
 expr:    OP_ADD(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\taddq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
+expr:    OP_ADD(expr,zero)                # 0 # 
+expr:    OP_ADD(zero,expr)                # 1 # move(bnode->kids[1]->reg, bnode->reg);
 
 expr:    OP_MUL(expr,expr)                # 1 # printf("\timulq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
 expr:    OP_MUL(imm,expr)                 # 2 # printf("\timulq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
@@ -58,6 +60,7 @@ expr:    OP_LEQ(imm, expr)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov
 expr:    OP_LEQ(expr, imm)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetle %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
 
 expr:    OP_ReadMem(expr)                 # 1 # printf("\tmovq (%%%s), %%%s\n", bnode->kids[0]->reg, bnode->reg);
+expr:    OP_ReadMem(imm)                  # 1 # printf("\tmovq ($%li), %%%s\n", bnode->kids[0]->value, bnode->reg);
 
 
 call:    OP_Call(OP_ID,exprs)             # 0 # /* ignore at the moment */
