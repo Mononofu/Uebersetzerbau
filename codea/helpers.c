@@ -38,6 +38,31 @@ char *get_param_reg(long number) {
   return reg_names[number-1];
 }
 
+char *get_8bit_reg(char* reg) {
+  if(strcmp(reg, "rax")) {
+    return "al";
+  } else if(strcmp(reg, "r10")) {
+    return "r10b";
+  } else if(strcmp(reg, "r11")) {
+    return "r11b";
+  } else if(strcmp(reg, "r9")) {
+    return "r9b";
+  } else if(strcmp(reg, "r8")) {
+    return "r8b";
+  } else if(strcmp(reg, "rcx")) {
+    return "cl";
+  } else if(strcmp(reg, "rdx")) {
+    return "dl";
+  } else if(strcmp(reg, "rsi")) {
+    return "sil";
+  } else if(strcmp(reg, "rdi")) {
+    return "dil";
+  } else {
+    printf("unknown register %s", reg);
+    exit(4);
+  }
+}
+
 void ret(void) {
   printf("\tret\n");
 }
