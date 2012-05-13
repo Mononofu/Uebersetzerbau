@@ -248,7 +248,9 @@ Expr: Unary
         @i @Term.1.vars@ = @Expr.vars@; 
 
         @i @Expr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
-        @i @Expr.node@ = new_node(OP_LEQ, @Term.0.node@, @Term.1.node@);
+        @i @Expr.node@ = new_node(OP_LEQ, @Term.0.node@, @Term.1.node@);        
+
+        @reg @Term.0.node@->reg = @Expr.node@->reg; @Term.1.node@->reg = get_next_reg(@Expr.node@->reg, @Expr.node@->skip_reg);
     @}
 
     | Term '#' Term 
@@ -258,6 +260,8 @@ Expr: Unary
 
         @i @Expr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
         @i @Expr.node@ = new_node(OP_NEQ, @Term.0.node@, @Term.1.node@);
+
+        @reg @Term.0.node@->reg = @Expr.node@->reg; @Term.1.node@->reg = get_next_reg(@Expr.node@->reg, @Expr.node@->skip_reg);
     @}
     ;  
 
