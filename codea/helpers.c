@@ -30,7 +30,7 @@ char *get_next_reg(char *name, int skip_reg) {
 char *get_param_reg(long number) {
 #ifdef DEBUG
   if(number == 0)
-    printf("trying to acces negative param reg: %d", number);
+    printf("trying to acces negative param reg: %d\n", number);
 #endif
 
   char *reg_names[]={"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
@@ -44,7 +44,7 @@ void ret(void) {
 void move(char *src, char *dst) {
 #ifdef DEBUG
   if(src == NULL || dst == NULL)
-    printf("null register! src: %d, dst: %d", src, dst);
+    printf("null register! src: %d, dst: %d\n", src, dst);
 #endif
 
   if(strcmp(src,dst)) {
