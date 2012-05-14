@@ -112,8 +112,6 @@ Stats:
 
         @i @Stats.0.out_labels@ = @Stats.1.out_labels@;
         @i @Stats.0.out_vars@ = @Stats.1.out_vars@;
-
-        @codegen burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
     @}
 
      ;  
@@ -142,6 +140,8 @@ Stat: T_RETURN Expr
         @i @Stat.node@ = new_node(OP_Return, @Expr.node@, (treenode *)NULL);
         
         @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
+
+        @codegen burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
     @}
 
     | T_GOTO T_ID  
@@ -165,9 +165,11 @@ Stat: T_RETURN Expr
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
-        @i @Stat.node@ = new_node(OP_IF, @Expr.node@, (treenode *)NULL);
+        @i @Stat.node@ = (treenode *)NULL;
 
-        @codegen printf("if_end\n");
+        @codegen burm_label(@Expr.node@); burm_reduce(@Expr.node@, 1);
+        @codegen if_condition(@Expr.node@, @Expr.immediate@);
+        @codegen printf("if_end:\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
