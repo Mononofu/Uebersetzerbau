@@ -15,7 +15,7 @@ struct symbol_t *clone_table(struct symbol_t *table) {
       new_tablex=table_add_param(new_tablex,element->identifier,element->param_index);
     }
     else {
-      new_tablex=table_add_symbol(new_tablex,element->identifier,element->type,0,element->stack_offset);
+      new_tablex=table_add_symbol(new_tablex,element->identifier,element->type,0);
     }
     element=element->next;
   }
