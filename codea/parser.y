@@ -132,7 +132,7 @@ Labeldef:                   /* Labeldefinition */
 
             @check check_not_variable(@Labeldef.0.vars@, @T_ID.name@);
 
-            @codegen printf("%s:", @T_ID.name@);
+            @codegen printf("%s:\n", @T_ID.name@);
         @}
         ;  
  
@@ -157,7 +157,7 @@ Stat: T_RETURN Expr
 
         @i @Stat.node@ = (treenode *)NULL;
 
-        @codegen printf("jmp %s", @T_ID.name@);
+        @codegen printf("\tjmp %s\n", @T_ID.name@);
     @}
 
     | T_IF Expr T_THEN Stats T_END  
