@@ -11,6 +11,7 @@ struct symbol_t {
   short type;
   int stack_offset;
   int param_index; /* -1 if not a parameter */
+  int usage_count;
 };
 
 typedef struct symbol_t symbol_t;

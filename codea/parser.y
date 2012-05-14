@@ -23,6 +23,7 @@
 @traversal @preorder reg
 @traversal @preorder count
 @traversal @postorder codegen
+
 %%
 /* rules */
 
@@ -431,7 +432,7 @@ Term: '(' Expr ')'
 
         @check check_variable_exists(@Term.vars@, @T_ID.name@); 
 
-        @count @Term.node@->usage_count++;
+        @count @Term.node@->usage_count = table_lookup(@Term.vars@, @T_ID.name@)->usage_count++;
     @}
 
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
