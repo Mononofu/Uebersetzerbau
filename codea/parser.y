@@ -169,6 +169,8 @@ Stat: T_RETURN Expr
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
+        
+        @codegen burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
         @codegen @revorder(1) if_condition(@Expr.node@, @Expr.immediate@);
         @codegen printf("if_end:\n");
