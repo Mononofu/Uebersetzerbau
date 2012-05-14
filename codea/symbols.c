@@ -3,15 +3,20 @@
 #include <stdio.h>
 #include "symbols.h"
 
-symbol_t *clone_table(symbol_t *table) {
-  symbol_t *element;
-  symbol_t *new_tablex;
+struct symbol_t *clone_table(struct symbol_t *table) {
+  struct symbol_t *element;
+  struct symbol_t *new_tablex;
 
   element=table;
-  new_tablex= NULL;
-  while((symbol_t *)NULL!=element) {
+  new_tablex=NULL;
+  while((struct symbol_t *)NULL!=element) {
     /* check return value */
-    new_tablex=table_add_symbol(new_tablex,element->identifier,element->type,0);
+    if(element->param_index!=-1) {
+      new_tablex=table_add_param(new_tablex,element->identifier,element->param_index);
+    }
+    else {
+      new_tablex=table_add_symbol(new_tablex,element->identifier,element->type,0,element->stack_offset);
+    }
     element=element->next;
   }
 
