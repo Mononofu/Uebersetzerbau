@@ -2,9 +2,14 @@
 #include <string.h>
 #include "helpers.h"
 
+char cur_function[100];
+int cur_if = 0;
 
 void function_header(char *name) {
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
+
+  /* store name of current function to prefix jump labels */
+  strcpy(cur_function, name);
 }
 
 char *get_next_reg(char *name, int skip_reg) {
@@ -90,14 +95,31 @@ void move(char *src, char *dst) {
 
 }
 
-int if_condition(treenode* node, int immediate){
+void if_condition(treenode* node, int immediate){
   if(immediate) {
     if(node->value & 1)
       printf("/* always true */\n");
     else
       printf("/* always false\n");
   }
-  else
-    printf("\tand $1, %%%s\n\tjz if_end\n", node->reg);
-    return 0;
+  else {
+    printf("\tand $1, %%%s\n\tjz if_end_%d\n", node->reg, cur_if);
+  }
+}
+
+void end_if(treenode* node, int immediate) {
+  if(immediate) {
+    if(node->value & 1)
+      printf("/* end of if */\n");
+    else 
+      printf("*/\n");
+  } 
+  else {
+    printf("if_end_%d:\n", cur_if);
+    cur_if++;
+  }
+}
+
+void print_label(char* prefix, char* name, char* postfix) {
+  printf("%s%s_%s%s", prefix, cur_function, name, postfix);
 }
