@@ -167,7 +167,7 @@ Stat: T_RETURN Expr
 
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, (treenode *)NULL);
 
-        @codegen @revorder(1) printf("if_end\n");
+        @codegen printf("if_end\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
