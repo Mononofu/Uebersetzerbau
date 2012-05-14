@@ -80,6 +80,7 @@ typedef struct treenode {
   struct treenode *parent;
   int skip_reg;
   int param_index; /* -1 if not a parameter */
+  int usage_count;
 } treenode;
 
 typedef treenode *treenodep;

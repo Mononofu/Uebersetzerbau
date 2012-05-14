@@ -21,6 +21,7 @@
 
 @traversal @postorder check
 @traversal @preorder reg
+@traversal @preorder count
 @traversal @postorder codegen
 %%
 /* rules */
@@ -429,6 +430,8 @@ Term: '(' Expr ')'
         @i @Term.node@ = new_named_leaf_value(OP_ID, @T_ID.name@, (table_lookup(@Term.vars@, @T_ID.name@)==NULL) ? 0 : table_lookup(@Term.vars@, @T_ID.name@)->stack_offset, (table_lookup(@Term.vars@, @T_ID.name@)==NULL) ? 0 : table_lookup(@Term.vars@, @T_ID.name@)->param_index);
 
         @check check_variable_exists(@Term.vars@, @T_ID.name@); 
+
+        @count @Term.node@->usage_count++;
     @}
 
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
