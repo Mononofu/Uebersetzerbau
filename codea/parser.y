@@ -169,6 +169,7 @@ Stat: T_RETURN Expr
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
+        @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
         
         @codegen burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
