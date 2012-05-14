@@ -35,6 +35,7 @@ symbol_t *table_add_symbol(symbol_t *table, char *identifier, short type, short 
   new_element->next=(symbol_t *)NULL;
   new_element->identifier=strdup(identifier);
   new_element->type=type;
+  new_element->param_index = -1;
 
   if((symbol_t *)NULL==table) {
     return new_element;
@@ -59,7 +60,7 @@ struct symbol_t *table_add_param(struct symbol_t *table, char *identifier, int p
   if(param_index < 1)
     printf("param index < 1: %d\n", param_index);
 #endif
-  
+
   if(table_lookup(table,identifier)!=(struct symbol_t *)NULL) {
     fprintf(stderr,"Duplicate parameter %s.\n",identifier);
     exit(3);
