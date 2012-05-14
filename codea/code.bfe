@@ -26,6 +26,7 @@
 stat:    ret                              # 0 #
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->reg, "rax"); ret(); 
+ret:     OP_Return(OP_ADD(expr, expr))    # 1 # printf("\tlea (%%%s, %%%s, 1), %%rax\n", bnode->childs[0]->childs[0]->reg, bnode->childs[0]->childs[1]->reg);
 
 expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) bnode->reg = get_param_reg(bnode->param_index);
 expr:    imm                              # 1 # printf("\tmovq $%li, %%%s\n", bnode->value, bnode->reg);
