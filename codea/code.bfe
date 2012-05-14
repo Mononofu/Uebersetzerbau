@@ -11,11 +11,6 @@
 /* TODO (-a)+b */
 /* TODO func f(a,a) return a; end; shall do the same as func f(b,a) return a; end; */
 
-
-/* expr:    OP_Negation(expr)                # 1 # printf("\tnegq %%%s\n", bnode->reg); */
-/* zero:    OP_Negation(zero)                # 0 # */
-/* zexpr:    OP_Negation(zexpr)              # 0 # */
-/* imm:    OP_Negation(imm)                  # 0 # bnode->value=-bnode->kids[0]->value; */
 %}
 
 %start stat
@@ -25,7 +20,7 @@
 
 stat:    ret                              # 0 #
 
-ret:     OP_Return(expr)                  # 1 # move(bnode->reg, "rax"); ret(); 
+ret:     OP_Return(expr)                  # 1 # move(bnode->kids[0]->reg, "rax"); ret(); 
 ret:     OP_Return(OP_ADD(expr, expr))    # 1 # printf("\tlea (%%%s, %%%s, 1), %%rax\n", bnode->kids[0]->kids[0]->reg, bnode->kids[0]->kids[1]->reg); ret();
 
 expr:    OP_ID                            # 1 # if(bnode->param_index!=-1) if(bnode->usage_count == 1) bnode->reg = get_param_reg(bnode->param_index); else move(get_param_reg(bnode->param_index), bnode->reg);
@@ -70,12 +65,14 @@ exprs:    expr                            # 0 #
 exprs:    OP_Args(exprs,expr)             # 0 #
 
 zero:    OP_Zero                          # 0 #
+zero:    OP_NEG(zero)                     # 0 #
 zero:    OP_MUL(zexpr,zero)               # 0 #
 zero:    OP_MUL(zero,zexpr)               # 0 #
 
 zexpr:    zero                            # 0 #
 zexpr:    imm                             # 0 #
 zexpr:    OP_ADD(zexpr,zexpr)             # 0 #
+zexpr:    OP_NEG(zexpr)                   # 0 #
 zexpr:    OP_MUL(zexpr,zexpr)             # 0 #
 zexpr:    OP_Field(zexpr,OP_ID)           # 0 #
 zexpr:    OP_ID                           # 0 #
