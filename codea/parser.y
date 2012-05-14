@@ -175,7 +175,7 @@ Stat: T_RETURN Expr
 
         @codegen @revorder(1) if_condition(@Expr.node@, @Expr.immediate@);
 
-        @codegen (@Expr.immediate@ && ! (@Expr.node@->value & 1)) ? printf("*/\n") : printf("if_end:\n");
+        @codegen (@Expr.immediate@) ? ((@Expr.node@->value & 1) ? printf("/* end of if */\n") : printf("*/\n") ): printf("if_end:\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
