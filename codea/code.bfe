@@ -14,11 +14,12 @@
 %}
 
 %start stat
-%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_NEG=12 OP_ID=13 OP_Number=14 OP_Field=15 OP_Return=16 OP_Zero=17 OP_One=18 OP_Args=19 OP_Call=20 OP_ReadMem=21
+%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_NEG=12 OP_ID=13 OP_Number=14 OP_Field=15 OP_Return=16 OP_Zero=17 OP_One=18 OP_Args=19 OP_Call=20 OP_ReadMem=21 OP_IF=22
 
 %%
 
 stat:    ret                              # 0 #
+stat:    OP_IF(expr)                      # 2 # printf("\tcmp $1 %%%s\n\tjne if_end\n", bnode->reg);
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->kids[0]->reg, "rax"); ret(); 
 ret:     OP_Return(OP_ADD(expr, expr))    # 1 # printf("\tlea (%%%s, %%%s, 1), %%rax\n", bnode->kids[0]->kids[0]->reg, bnode->kids[0]->kids[1]->reg); ret();

@@ -165,7 +165,9 @@ Stat: T_RETURN Expr
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
-        @i @Stat.node@ = (treenode *)NULL;
+        @i @Stat.node@ = new_node(OP_IF, @Expr.node@, (treenode *)NULL);
+
+        @codegen @revorder(1) printf("if_end\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
