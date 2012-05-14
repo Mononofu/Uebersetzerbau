@@ -83,7 +83,7 @@ treenode *new_named_leaf_value(int op, char *name, long value, int param) {
   treenode *new=(treenode *)malloc(sizeof(treenode));
   
 #ifdef DEBUG_ME
-  printf("new_named_leaf_value: %i (%s), %s, %li\n",op,rule_names[op],name,value);
+  printf("new_named_leaf_value: %i (%s), %s, %li\n, param: %d",op,rule_names[op],name,value, param);
 #endif
 
   new->kids[0]=(treenode *)NULL;
