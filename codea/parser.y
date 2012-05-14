@@ -170,7 +170,6 @@ Stat: T_RETURN Expr
 
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
 
-        @codegen burm_label(@Expr.node@); burm_reduce(@Expr.node@, 1);
         @codegen if_condition(@Expr.node@, @Expr.immediate@);
         @codegen printf("if_end:\n");
     @}
