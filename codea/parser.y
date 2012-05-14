@@ -174,7 +174,8 @@ Stat: T_RETURN Expr
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
         @codegen @revorder(1) if_condition(@Expr.node@, @Expr.immediate@);
-        @codegen printf("if_end:\n");
+
+        @codegen (@Expr.immediate@ && ! (@Expr.node@->value & 1)) ? printf("*/\n") : printf("if_end:\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  

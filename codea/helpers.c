@@ -90,9 +90,14 @@ void move(char *src, char *dst) {
 
 }
 
-void if_condition(treenode* node, int immediate){
-  if(immediate) 
-    printf("\tand $1, $%li\n\tjz if_end\n", node->value); 
+int if_condition(treenode* node, int immediate){
+  if(immediate) {
+    if(node->value & 1)
+      printf("/* always true */\n");
+    else
+      printf("/* always false\n");
+  }
   else
     printf("\tand $1, %%%s\n\tjz if_end\n", node->reg);
+    return 0;
 }
