@@ -55,6 +55,11 @@ struct symbol_t *table_add_param(struct symbol_t *table, char *identifier, int p
   struct symbol_t *element;
   struct symbol_t *new_element;
 
+#ifdef DEBUG
+  if(param_index < 1)
+    printf("param index < 1: %d\n", param_index);
+#endif
+  
   if(table_lookup(table,identifier)!=(struct symbol_t *)NULL) {
     fprintf(stderr,"Duplicate parameter %s.\n",identifier);
     exit(3);
