@@ -51,9 +51,9 @@ expr:    OP_AND(expr, expr)               # 1 # printf("\tand %%%s, %%%s\n", bno
 expr:    OP_AND(imm, expr)                # 2 # printf("\tand $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
 expr:    OP_AND(expr, imm)                # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\tand $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tand $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
 
-expr:    OP_NEQ(expr, expr)               # 3 # printf("\txor %%%s, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
-expr:    OP_NEQ(imm, expr)                # 3 # printf("\txor $%li, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->reg, get_8bit_reg(bnode->reg));
-expr:    OP_NEQ(expr, imm)                # 3 # printf("\txor $%li, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
+expr:    OP_NEQ(expr, expr)               # 3 # printf("\tcmpq %%%s, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
+expr:    OP_NEQ(imm, expr)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->reg, get_8bit_reg(bnode->reg));
+expr:    OP_NEQ(expr, imm)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetne %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
 
 expr:    OP_LEQ(expr, expr)               # 3 # printf("\tcmpq %%%s, %%%s\n\tmov $0, %%%s\n\tsetle %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->kids[0]->reg, get_8bit_reg(bnode->kids[0]->reg));
 expr:    OP_LEQ(imm, expr)                # 3 # printf("\tcmpq $%li, %%%s\n\tmov $0, %%%s\n\tsetle %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg, get_8bit_reg(bnode->reg));
