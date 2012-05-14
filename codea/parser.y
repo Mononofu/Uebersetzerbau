@@ -171,7 +171,7 @@ Stat: T_RETURN Expr
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
 
         @codegen if_condition(@Expr.node@, @Expr.immediate@);
-        @codegen printf("if_end:\n");
+        @codegen @revorder(1) printf("if_end:\n");
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  
