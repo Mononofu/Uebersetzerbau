@@ -39,7 +39,7 @@ expr:    OP_ADD(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { m
 expr:    OP_ADD(expr,zero)                # 0 # 
 expr:    OP_ADD(zero,expr)                # 1 # move(bnode->kids[1]->reg, bnode->reg);
 
-expr:    OP_MUL(expr,expr)                # 1 # printf("\timulq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
+expr:    OP_MUL(expr,expr)                # 1 # bnode->reg = bnode->kids[0]->reg; printf("\timulq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg);
 expr:    OP_MUL(imm,expr)                 # 2 # printf("\timulq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); move(bnode->kids[1]->reg, bnode->reg);
 expr:    OP_MUL(expr,imm)                 # 1 # if(bnode->kids[0]->op=OP_ID) { move(bnode->kids[0]->reg, bnode->reg); printf("\timulq $%li, %%%s\n", bnode->kids[1]->value, bnode->reg); } else { printf("\tadd $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); }
 
