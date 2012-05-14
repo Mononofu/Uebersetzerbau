@@ -82,7 +82,8 @@ void move(char *src, char *dst) {
   if(strcmp(src,dst)) {
     printf("\tmovq %%%s, %%%s\n",src,dst);
   } 
-#ifdef DEBUG_ME else {
+#ifdef DEBUG_ME 
+  else {
     printf("didn't move %s to %s", src, dst);
   }
 #endif
