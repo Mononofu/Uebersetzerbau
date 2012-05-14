@@ -92,7 +92,7 @@ void move(char *src, char *dst) {
 
 void if_condition(treenode* node, int immediate){
   if(immediate) 
-    printf("\tcmp $1 $%li\n\tjne if_end\n", node->value); 
+    printf("\tcmp $1, $%li\n\tjne if_end\n", node->value); 
   else 
-    printf("\tcmp $1 %%%s\n\tjne if_end\n", node->reg);
+    printf("\tcmp $1, %%%s\n\tjne if_end\n", node->reg);
 }
