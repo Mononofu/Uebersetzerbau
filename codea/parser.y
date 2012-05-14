@@ -16,7 +16,7 @@
 @attributes { struct symbol_t *vars; int num_pars; } Pars
 @attributes { struct symbol_t *vars; struct treenode* node; int immediate; } Term Expr AndExpr Lexpr Unary PlusExpr MultExpr  Args
 @attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; struct treenode* node; } Stat
-@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; } Stats
+@attributes { struct symbol_t *in_vars; struct symbol_t *out_vars; struct symbol_t *in_labels; struct symbol_t *out_labels; struct symbol_t *labels; struct treenode* node; } Stats
 @attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
 @traversal @postorder check
@@ -92,6 +92,7 @@ Pars: T_ID                           /* Parameterdefinition */
  
 Stats: 
     @{
+        @i @Stats.node@ = new_leaf(OP_NOP);
         @i @Stats.out_labels@ = @Stats.in_labels@; 
         @i @Stats.out_vars@ = @Stats.in_vars@;
     @}
@@ -112,6 +113,8 @@ Stats:
 
         @i @Stats.0.out_labels@ = @Stats.1.out_labels@;
         @i @Stats.0.out_vars@ = @Stats.1.out_vars@;
+
+        @i @Stats.0.node@ = new_node(OP_Stats, @Stat.node@, @Stats.1.node@);
     @}
 
      ;  
@@ -165,7 +168,7 @@ Stat: T_RETURN Expr
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
-        @i @Stat.node@ = (treenode *)NULL;
+        @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
 
         @codegen burm_label(@Expr.node@); burm_reduce(@Expr.node@, 1);
         @codegen if_condition(@Expr.node@, @Expr.immediate@);
