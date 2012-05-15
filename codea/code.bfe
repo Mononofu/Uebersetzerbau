@@ -29,7 +29,7 @@ expr:     epc                             # 1 #  bnode->reg = bnode->kids[0]->re
 %%
 
 stat:    ret                              # 0 #
-stat:    OP_IF(expr)                      # 0 #
+stat:    OP_IF(expr)                      # 0 # printf(" /* test */ ");
 stat:    OP_IF(imm)                       # 0 # bnode->value = bnode->kids[0]->value;
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->kids[0]->reg, "rax"); ret(); 
