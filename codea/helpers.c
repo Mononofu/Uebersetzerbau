@@ -237,7 +237,7 @@ void record_param(long number, char* name) {
   var_usage *var = (var_usage *)malloc(sizeof(var_usage));
   var->name = strdup(name);
   var->usage_count = 0;
-  var->reg = strdup( param_regs[number] );
+  var->reg = strdup( param_regs[number-1] );
 
   if(vars == NULL) {
     vars = var;

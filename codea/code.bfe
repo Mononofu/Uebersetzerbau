@@ -41,7 +41,7 @@ expr:    OP_ID                            # 0 # bnode->reg = reg_for_var(bnode->
 expr:    imm                              # 1 # bnode->reg = newreg(); printf("\tmovq $%li, %%%s\n", bnode->value, bnode->reg);
 expr:    call                             # 0 #
 
-expr:    OP_NOT(expr)                     # 2 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq %%%s, %%%s", bnode->kids[0]->reg, bnode->reg);  printf("\tnot %%%s\n", bnode->reg);
+expr:    OP_NOT(expr)                     # 2 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq %%%s, %%%s\n", bnode->kids[0]->reg, bnode->reg);  printf("\tnot %%%s\n", bnode->reg);
 expr:    OP_NOT(OP_NOT(expr))             # 0 # bnode->reg = bnode->kids[0]->kids[0]->reg; 
 
 expr:    OP_NEG(expr)                     # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\timul $-1, %%%s, %%%s\n", bnode->kids[0]->reg, bnode->reg);
@@ -53,9 +53,9 @@ expr:    OP_ADD(expr,imm)                 # 1 # free_childs_alloc_reg(bnode); pr
 expr:    OP_ADD(expr,zero)                # 0 # bnode->reg = bnode->kids[0]->reg;
 expr:    OP_ADD(zero,expr)                # 0 # bnode->reg = bnode->kids[1]->reg;
 
-expr:    OP_MUL(expr,expr)                # 1 # free_childs_alloc_reg(bnode); printf("\timulq %%%s, %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg);
-expr:    OP_MUL(imm,expr)                 # 1 # free_childs_alloc_reg(bnode); printf("\timulq $%li, %%%s, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->reg);
-expr:    OP_MUL(expr,imm)                 # 1 # free_childs_alloc_reg(bnode); printf("\timulq $%li, %%%s, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg);
+expr:    OP_MUL(expr,expr)                # 1 # free_childs_alloc_reg(bnode); printf("\timul %%%s, %%%s, %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg);
+expr:    OP_MUL(imm,expr)                 # 1 # free_childs_alloc_reg(bnode); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg, bnode->reg);
+expr:    OP_MUL(expr,imm)                 # 1 # free_childs_alloc_reg(bnode); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg);
 
 expr:    OP_AND(expr, expr)               # 2 # bnode->reg = newreg(); printf("\tmovq %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg); printf("\tand %%%s, %%%s\n", bnode->kids[0]->reg, bnode->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); 
 expr:    OP_AND(imm, expr)                # 2 # bnode->reg = newreg(); printf("\tmovq $%li, %%%s\n", bnode->kids[0]->value, bnode->reg); printf("\tand %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg); freereg(bnode->kids[1]->reg); 
