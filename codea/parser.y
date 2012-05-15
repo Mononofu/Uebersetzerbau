@@ -187,8 +187,6 @@ Stat: T_RETURN Expr
 
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
-        @codegen @revorder(1) if_condition(@Expr.node@, @Expr.immediate@);
-
         @codegen end_if(@Expr.node@, @Expr.immediate@);
     @}
 
