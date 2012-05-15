@@ -11,10 +11,6 @@
 /* TODO (-a)+b */
 /* TODO func f(a,a) return a; end; shall do the same as func f(b,a) return a; end; */
 
-/* constant folding: not working
-
-*/
-
 %}
 
 %start stat
@@ -76,12 +72,17 @@ expr:    OP_ReadMem(imm)                  # 1 # bnode->reg = newreg(); printf("\
 
 
 
-epc:      expr                            # 0 # 
+epc:      expr                            # 0 #   /* constant folding: expression plus constant */
 epc:      OP_ADD(epc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 epc:      OP_ADD(imm, epc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 expr:     OP_ADD(epc, epc)                # 1 # free_childs_alloc_reg(bnode); printf("\tlea %li(%%%s, %%%s, 1), %%%s\n", bnode->kids[0]->value + bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[1]->reg, bnode->reg);
 expr:     epc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\tlea $%li(%%%s), %%%s\n", bnode->value, tmp, bnode->reg); }
 
+
+etc:      expr                            # 0 # bnode->value = 1;  /* constant folding: expression times constant */
+etc:      OP_MUL(etc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
+etc:      OP_MUL(imm, etc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
+expr:    OP_MUL(etc, etc)                  # 2 # freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); if(get_reg_usage(bnode->kids[0]->reg) == 0) { claimreg(bnode->kids[0]->reg); bnode->reg = bnode->kids[0]->reg; printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[1]->reg, bnode->reg); } else if(get_reg_usage(bnode->kids[1]->reg) == 0) { claimreg(bnode->kids[1]->reg); bnode->reg = bnode->kids[1]->reg; printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg); } else { bnode->reg = newreg(); move(bnode->kids[0]->reg, bnode->reg); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[1]->reg, bnode->reg); }
 
 call:    OP_Call(OP_ID,exprs)             # 0 # /* ignore at the moment */
 
