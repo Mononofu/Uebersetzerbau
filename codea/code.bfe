@@ -31,8 +31,8 @@ expr:     epc                             # 1 #  bnode->reg = bnode->kids[0]->re
 stat:    ret                              # 0 #
 stat:    OP_IF(expr)                      # 2 # printf("\tand $1, %%%s\n\tjz if_end_%d\n", bnode->kids[0]->reg, bnode->param_index);
 stat:    OP_IF(imm)                       # 0 # if( bnode->kids[0]->value & 1) { printf("/* always true */\n"); } else { printf("/* always false\n"); }
-stat:    OP_IF(OP_LEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[0]->reg, bnode->kids[0]->kids[1]->reg, bnode->param_index);
-stat:    OP_IF(OP_LEQ(imm, expr))        # 2 # printf("\tcmpq $%li, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg, bnode->param_index);
+stat:    OP_IF(OP_LEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg, bnode->param_index);
+stat:    OP_IF(OP_LEQ(imm, expr))        # 2 # printf("\tcmpq %%%s, $%li\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->value,  bnode->param_index);
 stat:    OP_IF(OP_LEQ(expr, imm))        # 2 # printf("\tcmpq $%li, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->param_index);
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->kids[0]->reg, "rax"); ret(); 
