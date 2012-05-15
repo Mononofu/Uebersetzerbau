@@ -99,6 +99,10 @@ void move(char *src, char *dst) {
 
 }
 
+void start_if(treenode* node) {
+  node->param_index = cur_if++;
+}
+
 void end_if(treenode* node, int immediate) {
   if(immediate) {
     if(node->value & 1)
@@ -107,8 +111,7 @@ void end_if(treenode* node, int immediate) {
       printf("*/\n");
   } 
   else {
-    printf("if_end_%d:\n", cur_if);
-    cur_if++;
+    printf("if_end_%d:\n", node->param_index);
   }
 }
 

@@ -29,7 +29,7 @@ expr:     epc                             # 1 #  bnode->reg = bnode->kids[0]->re
 %%
 
 stat:    ret                              # 0 #
-stat:    OP_IF(expr)                      # 0 # printf("\tand $1, %%%s\n\tjz if_end_%d\n", node->reg, cur_if);
+stat:    OP_IF(expr)                      # 0 # printf("\tand $1, %%%s\n\tjz if_end_%d\n", bnode->reg, node->param_index);
 stat:    OP_IF(imm)                       # 0 # if( bnode->kids[0]->value & 1) { printf("/* always true */\n"); } else { printf("/* always false\n"); }
 
 ret:     OP_Return(expr)                  # 1 # move(bnode->kids[0]->reg, "rax"); ret(); 
