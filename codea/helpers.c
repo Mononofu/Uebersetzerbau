@@ -143,6 +143,21 @@ void freereg(char *reg) {
   reg_usage[i] -= 1;
 }
 
+void claimreg(char *reg) {
+  int i = 0;
+
+  while( strcmp(reg, regs[i]) != 0 ) {
+    ++i;
+  }
+
+  if( strcmp(reg, regs[i]) != 0) {
+    printf("unknown regigster: %s\n", reg);
+    exit(4);
+  }
+
+  reg_usage[i] += 1;
+}
+
 char* newreg() {
   int i = 0;
 
@@ -194,6 +209,22 @@ char* reg_for_var(char* name) {
 
     reg_usage[i] += cur_var->usage_count;
     return regs[i];*/
+}
+
+
+int get_reg_usage(char *reg) {
+  int i = 0;
+
+  while( strcmp(reg, regs[i]) != 0 ) {
+    ++i;
+  }
+
+  if( strcmp(reg, regs[i]) != 0) {
+    printf("unknown regigster: %s\n", reg);
+    exit(4);
+  }
+
+  return reg_usage[i];
 }
 
 

@@ -28,8 +28,10 @@ void end_if(treenode* node, int immediate);
 void print_label(char* prefix, char* name, char* postfix);
 
 void freereg(char *reg);
+void claimreg(char *reg);
 char* newreg();
 char* reg_for_var(char* name);
+int get_reg_usage(char *reg);
 
 void record_var_usage(char* name);
 void record_param(long number, char* name);
