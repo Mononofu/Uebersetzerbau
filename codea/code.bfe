@@ -44,7 +44,7 @@ expr:    call                             # 0 #
 expr:    OP_NOT(expr)                     # 2 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq %%%s, %%%s\n", bnode->kids[0]->reg, bnode->reg);  printf("\tnot %%%s\n", bnode->reg);
 expr:    OP_NOT(OP_NOT(expr))             # 0 # bnode->reg = bnode->kids[0]->kids[0]->reg; 
 
-expr:    OP_NEG(expr)                     # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\timul %%%s, %%%s, $-1\n", bnode->kids[0]->reg, bnode->reg);
+expr:    OP_NEG(expr)                     # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\timul $-1, %%%s, %%%s\n", bnode->kids[0]->reg, bnode->reg);
 expr:    OP_NEG(OP_NEG(expr))             # 0 # bnode->reg = bnode->kids[0]->kids[0]->reg; 
 
 expr:    OP_ADD(expr,expr)                # 1 # free_childs_alloc_reg(bnode); printf("\tlea (%%%s, %%%s, 1), %%%s\n", bnode->kids[1]->reg, bnode->kids[0]->reg, bnode->reg);
