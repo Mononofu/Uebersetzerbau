@@ -76,7 +76,7 @@ expr:    OP_ReadMem(imm)                  # 1 # bnode->reg = newreg(); printf("\
 
 
 
-epc:      expr                            # 0 # freereg(bnode->reg); if ( get_reg_usage(bnode->reg) != 0 ) { char *tmp = bnode->reg; bnode->reg = newreg(); move(tmp, bnode->reg); }
+epc:      expr                            # 0 # freereg(bnode->reg); char *tmp = bnode->reg; bnode->reg = newreg(); move(tmp, bnode->reg);
 epc:      OP_ADD(epc, imm)                # 0 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 epc:      OP_ADD(imm, epc)                # 0 # freereg(bnode->kids[1]->reg); bnode->reg = newreg(); bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 expr:     OP_ADD(epc, epc)                # 1 # free_childs_alloc_reg(bnode); printf("\tlea %li(%%%s, %%%s, 1), %%%s\n", bnode->kids[0]->value + bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[1]->reg, bnode->reg);
