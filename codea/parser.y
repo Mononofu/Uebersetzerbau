@@ -43,15 +43,18 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
         @}
        | T_ID '(' Pars ',' ')' T_END
         @{ 
+            @check clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
        | T_ID '(' ')' T_END
         @{ 
+            @check clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
 
        |T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
         @{ 
+            @check clean_slate();
             @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
@@ -61,6 +64,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        | T_ID '(' ')' Stats T_END
         @{ 
+            @check clean_slate();
             @i @Stats.in_vars@ = NULL;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
@@ -70,6 +74,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        | T_ID '(' Pars ',' ')' Stats T_END
         @{ 
+            @check clean_slate();
             @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 

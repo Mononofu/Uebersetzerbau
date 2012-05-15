@@ -20,6 +20,7 @@ void clean_slate() {
 }
 
 void function_header(char *name) {
+  init_reg_usage();
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
   /* store name of current function to prefix jump labels */
@@ -236,7 +237,7 @@ int get_reg_usage(char *reg) {
   return reg_usage[i];
 }
 
-
+/* called once for each time a variable is seen */
 void record_var_usage(char* name) {
   var_usage *cur_var = vars;
   var_usage *prev;
@@ -264,7 +265,7 @@ void record_var_usage(char* name) {
 
 }
 
-
+/* called once for every function parameter */
 void record_param(long number, char* name) { 
   var_usage *cur_var = vars;
   var_usage *prev;
@@ -305,4 +306,24 @@ void free_childs_alloc_reg(treenode* node) {
   if(node->kids[1]->reg != NULL)
     freereg(node->kids[1]->reg);
   node->reg = newreg();
+}
+
+void init_reg_usage() {
+  var_usage *cur_var = vars;
+  int i;
+
+  while(cur_var != NULL) {
+    i = 0;
+
+    if(cur_var->reg == NULL) {
+      printf("error: var has no register - %s\n", cur_var->name);
+      exit(4);
+    }
+    while( strcmp(cur_var->reg, regs[i]) != 0 ) {
+      ++i;
+    }
+
+    reg_usage[i] = cur_var->usage_count;
+    cur_var = cur_var->next;
+  }
 }
