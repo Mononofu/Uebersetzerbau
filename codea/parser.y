@@ -38,6 +38,7 @@ Program: Program Funcdef ';'
  
 Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without body */
         @{
+            @check clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
        | T_ID '(' Pars ',' ')' T_END
@@ -81,11 +82,15 @@ Pars: T_ID                           /* Parameterdefinition */
     @{
         @i @Pars.vars@ = table_add_param(NULL, @T_ID.name@, 1);
         @i @Pars.num_pars@ = 1;
+
+        @count record_param(1, @T_ID.name@);
     @}
     | Pars ',' T_ID 
     @{
         @i @Pars.0.vars@ = table_add_param(@Pars.1.vars@, @T_ID.name@, @Pars.0.num_pars@);
         @i @Pars.0.num_pars@ = @Pars.1.num_pars@ + 1;
+
+        @count record_param(@Pars.0.num_pars@, @T_ID.name@);
     @}
     ;
 
@@ -446,7 +451,7 @@ Term: '(' Expr ')'
 
         @check check_variable_exists(@Term.vars@, @T_ID.name@); 
 
-        @count @Term.node@->usage_count = table_lookup(@Term.vars@, @T_ID.name@)->usage_count++;
+        @count record_var_usage(@T_ID.name@);
     @}
 
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
