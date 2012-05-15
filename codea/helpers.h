@@ -38,4 +38,6 @@ void record_param(long number, char* name);
 
 void free_childs_alloc_reg(treenode* node);
 
+void dump_usage();
+
 #endif

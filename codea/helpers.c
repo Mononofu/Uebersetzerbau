@@ -174,6 +174,15 @@ char* newreg() {
   return regs[i];
 }
 
+void dump_usage() {
+  int i = 0;
+
+  printf("---- Register usage ----")
+  for(i = 0; i < 9; ++i) {
+    printf("%s: %d\n", regs[i], reg_usage[i])
+  }
+}
+
 char* reg_for_var(char* name) {
   int i = 0;
 
