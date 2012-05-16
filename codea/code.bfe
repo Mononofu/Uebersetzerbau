@@ -19,14 +19,25 @@
 %%
 
 stat:    ret                              # 0 #
-stat:    OP_IF(expr)                      # 2 # printf("\tand $1, %%%s\n\tjz if_end_%d\n", bnode->kids[0]->reg, bnode->param_index);
+stat:    OP_IF(expr)                      # 2 # printf("\tand $1, %%%s\n\tjz if_end_%d\n", bnode->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->reg);
 stat:    OP_IF(imm)                       # 0 # if( bnode->kids[0]->value & 1) { printf("/* always true */\n"); } else { printf("/* always false\n"); }
-stat:    OP_IF(OP_LEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg, bnode->param_index);
-stat:    OP_IF(OP_LEQ(imm, expr))        # 2 # printf("\tcmpq %%%s, $%li\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->value,  bnode->param_index);
-stat:    OP_IF(OP_LEQ(expr, imm))        # 2 # printf("\tcmpq $%li, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->param_index);
-stat:    OP_IF(OP_NEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg, bnode->param_index);
-stat:    OP_IF(OP_NEQ(imm, expr))        # 2 # printf("\tcmpq %%%s, $%li\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->value,  bnode->param_index);
-stat:    OP_IF(OP_NEQ(expr, imm))        # 2 # printf("\tcmpq $%li, %%%s\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->param_index);
+stat:    OP_IF(OP_LEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_LEQ(imm, expr))         # 2 # printf("\tcmpq %%%s, $%li\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_LEQ(expr, imm))         # 2 # printf("\tcmpq $%li, %%%s\n\tjg if_end_%d\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->reg); 
+
+stat:    OP_IF(OP_NEQ(expr, expr))        # 2 # printf("\tcmpq %%%s, %%%s\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NEQ(imm, expr))         # 2 # printf("\tcmpq %%%s, $%li\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NEQ(expr, imm))         # 2 # printf("\tcmpq $%li, %%%s\n\tje if_end_%d\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->reg);
+
+stat:    OP_IF(OP_NOT(OP_LEQ(expr, expr)))      # 2 # printf("\tcmpq %%%s, %%%s\n\tjle if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NOT(OP_LEQ(imm, expr)))       # 2 # printf("\tcmpq %%%s, $%li\n\tjle if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NOT(OP_LEQ(expr, imm)))       # 2 # printf("\tcmpq $%li, %%%s\n\tjle if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg);
+
+stat:    OP_IF(OP_NOT(OP_NEQ(expr, expr)))      # 2 # printf("\tcmpq %%%s, %%%s\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NOT(OP_NEQ(imm, expr)))       # 2 # printf("\tcmpq %%%s, $%li\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
+stat:    OP_IF(OP_NOT(OP_NEQ(expr, imm)))       # 2 # printf("\tcmpq $%li, %%%s\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg);
+
+
 
 ret:     OP_Return(expr)                  # 1 # freereg(bnode->kids[0]->reg); move(bnode->kids[0]->reg, "rax"); ret(); 
 ret:     OP_Return(imm)                   # 1 # printf("\tmovq $%li, %%rax\n", bnode->kids[0]->value); ret();
