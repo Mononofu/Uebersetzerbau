@@ -191,8 +191,6 @@ Stat: T_RETURN Expr
 
         @i @Stat.node@ = new_node(OP_Assign, new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0), @Expr.node@);
 
-        @codegen record_var_usage(@T_ID.name@);
-
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
     @}
