@@ -50,7 +50,7 @@ ret:     OP_Return(OP_ADD(expr, imm))     # 1 # printf("\tlea %li(%%%s), %%rax\n
 ret:     OP_Return(OP_ADD(epc, epc))      # 1 # freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); printf("\tlea %li(%%%s, %%%s, 1), %%rax\n", bnode->kids[0]->kids[0]->value + bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->kids[0]->kids[1]->reg); ret();
 ret:     OP_Return(OP_ADD(epc, imm))      # 1 # freereg(bnode->kids[0]->kids[0]->reg); printf("\tlea %li(%%%s), %%rax\n", bnode->kids[0]->kids[0]->value + bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); ret();
 ret:     OP_Return(OP_ADD(imm, epc))      # 1 # freereg(bnode->kids[0]->kids[1]->reg); printf("\tlea %li(%%%s), %%rax\n", bnode->kids[0]->kids[0]->value + bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[1]->reg); ret();
-ret:     OP_Return(OP_MUL(etc, etc))      # 2 # printf("\timul $%li, %%%s, %%rax\n", bnode->kids[0]->kids[0]->value * bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); printf("\timul %%%s, %%rax\n", bnode->kids[0]->kids[1]->reg); ret();
+
 ret:     OP_Return(OP_MUL(imm, etc))      # 1 # printf("\timul $%li, %%%s, %%rax\n", bnode->kids[0]->kids[0]->value * bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[1]->reg); freereg(bnode->kids[0]->kids[1]->reg); ret();
 ret:     OP_Return(OP_MUL(etc, imm))      # 1 # printf("\timul $%li, %%%s, %%rax\n", bnode->kids[0]->kids[0]->value * bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[0]->reg); ret();
 
