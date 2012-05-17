@@ -9,19 +9,34 @@ int reg_usage[] = {0,     0,     0,    0,    0,     0,     0,     0,     0};
 char *param_regs[]={"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 var_usage *vars;
 
-
-void clean_slate() {
-  /* clean function specific stuff */
-
-  printf("Executed clean slate\n");
+void function_header(char *name, symbol_t *params) {
+  /* clean regs */
   int i;
   for(i = 0; i < 9; ++i)
     reg_usage[i] = 0;  
 
+  /* init params */
   vars = NULL;
-}
+  var_usage *end;
+  symbol_t *cur_parm = params;
 
-void function_header(char *name) {
+  while(cur_parm != NULL) {
+    var_usage *var = (var_usage *)malloc(sizeof(var_usage));
+    var->name = strdup(cur_parm->identifier);
+    var->usage_count = 0;
+    var->reg = strdup( param_regs[cur_parm->param_index - 1] );
+
+    if(vars == NULL) {
+      vars = var;
+      end = vars;
+    } else {
+      end->next = var;
+      end = end->next;
+    }
+
+    cur_parm = cur_parm->next;
+  } 
+
   init_reg_usage();
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
@@ -257,29 +272,6 @@ void record_var_usage(char* name) {
   }
 
 }
-
-/* called once for every function parameter */
-void record_param(long number, char* name) { 
-  var_usage *cur_var = vars;
-  var_usage *prev;
-
-  while(cur_var != NULL) {
-    prev = cur_var;
-    cur_var = cur_var->next;
-  }
-
-  var_usage *var = (var_usage *)malloc(sizeof(var_usage));
-  var->name = strdup(name);
-  var->usage_count = 0;
-  var->reg = strdup( param_regs[number-1] );
-
-  if(vars == NULL) {
-    vars = var;
-  } else {
-    prev->next = var;
-  }
-}
-
 
 char *get_param_reg(long number) {
 #ifdef DEBUG_ME

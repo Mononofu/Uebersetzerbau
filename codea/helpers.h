@@ -2,6 +2,7 @@
 #define _HELPERS_H_
 
 #include "tree.h"
+#include "symbols.h"
 
 /* #define DEBUG_ME */
 
@@ -18,7 +19,7 @@ typedef struct var_usage var_usage;
 void clean_slate(); 
 void init_reg_usage();
 
-void function_header(char *name);
+void function_header(char *name, symbol_t *params);
 char *get_next_reg(char *name, int skip_reg);
 char *get_param_reg(long number);
 void ret(void);
