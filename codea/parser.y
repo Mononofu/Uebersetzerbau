@@ -416,7 +416,7 @@ Unary: T_NOT T_NOT Unary
         @{ 
             @i @Unary.1.vars@ = @Unary.0.vars@; 
 
-            @i @Unary.0.immediate@ = @Unary.1.immediate@;
+            @i @Unary.0.immediate@ = 0;
             @i @Unary.0.node@ = new_node(OP_ReadMem, @Unary.1.node@, (treenode *) NULL);
 
             @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
