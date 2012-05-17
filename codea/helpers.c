@@ -12,6 +12,8 @@ var_usage *vars;
 
 void clean_slate() {
   /* clean function specific stuff */
+
+  printf("Executed clean slate\n");
   int i;
   for(i = 0; i < 9; ++i)
     reg_usage[i] = 0;  
