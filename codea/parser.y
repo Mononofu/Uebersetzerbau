@@ -199,7 +199,12 @@ Stat: T_RETURN Expr
 
         @check check_not_label(@Stat.labels@, @T_ID.name@);
 
-        @i @Stat.node@ = (treenode *)NULL;
+        @i @Stat.node@ = new_node(OP_Assign, new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0), @Expr.node@);
+
+        @count record_var_usage(@T_ID.name@);
+
+        @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
+
     @}
 
     | Lexpr '=' Expr                /* Zuweisung */  
@@ -209,7 +214,9 @@ Stat: T_RETURN Expr
         @i @Stat.out_vars@ = @Stat.in_vars@;
         @i @Stat.out_labels@ = @Stat.in_labels@;
 
-        @i @Stat.node@ = (treenode *)NULL;
+        @i @Stat.node@ = new_node(OP_Assign, @Lexpr.node@, @Expr.node@);
+
+        @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
     @}
 
     | Term  
@@ -233,15 +240,17 @@ Stat: T_RETURN Expr
 Lexpr: T_ID        /* schreibender Variablenzugriff */  
      @{ 
         @check check_variable_exists(@Lexpr.vars@, @T_ID.name@); 
-        @i @Lexpr.node@ = NULL;
         @i @Lexpr.immediate@ = 0;
+
+        @i @Lexpr.node@ = new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0);
     @}
 
      | '*' Unary /* schreibender Speicherzugriff */  
      @{ 
         @i @Unary.vars@ = @Lexpr.vars@; 
-        @i @Lexpr.node@ = NULL;
-        @i @Lexpr.immediate@ = 0;
+        @i @Lexpr.immediate@ = @Unary.immediate@;
+
+        @i @Lexpr.node@ = @Unary.node@;
     @}
      ;  
  

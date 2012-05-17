@@ -36,7 +36,8 @@ enum {
   OP_ReadMem,
   OP_IF,
   OP_Stats,
-  OP_NOP
+  OP_NOP,
+  OP_Assign
 };
 
 static char rule_names[100][100]={
@@ -71,7 +72,8 @@ static char rule_names[100][100]={
   "OP_ReadMem",
   "OP_IF",
   "OP_Stats",
-  "OP_NOP"
+  "OP_NOP",
+  "OP_Assign"
 };
     
 
