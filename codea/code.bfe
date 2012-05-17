@@ -107,14 +107,14 @@ epc:      expr                            # 0 #   /* constant folding: expressio
 epc:      OP_ADD(epc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 epc:      OP_ADD(imm, epc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 expr:     OP_ADD(epc, epc)                # 1 # free_childs_alloc_reg(bnode); printf("\tlea %li(%%%s, %%%s, 1), %%%s\n", bnode->kids[0]->value + bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[1]->reg, bnode->reg);
-expr:     epc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\tlea %li(%%%s), %%%s\n", bnode->value, tmp, bnode->reg); }
+expr:     epc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\tlea %li(%%%s), %%%s\n", bnode->value, tmp, bnode->reg); bnode->value = 0; }
 
 
 etc:      expr                            # 0 # bnode->value = 1;  /* constant folding: expression times constant */
 etc:      OP_MUL(etc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 etc:      OP_MUL(imm, etc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 expr:     OP_MUL(etc, etc)                # 2 # bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); printf("\timul %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg);
-expr:     etc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->value, tmp, bnode->reg); }
+expr:     etc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->value, tmp, bnode->reg); bnode->value = 0; }
 
 call:    OP_Call(OP_ID,exprs)             # 0 # /* ignore at the moment */
 
