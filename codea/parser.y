@@ -38,23 +38,23 @@ Program: Program Funcdef ';'
  
 Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without body */
         @{
-            @reg clean_slate();
+            @codegen clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
        | T_ID '(' Pars ',' ')' T_END
         @{ 
-            @reg clean_slate();
+            @codegen clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
        | T_ID '(' ')' T_END
         @{ 
-            @reg clean_slate();
+            @codegen clean_slate();
             @codegen function_header(@T_ID.name@); imm_ret();
         @}
 
        |T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
         @{ 
-            @reg clean_slate();
+            @codegen clean_slate();
             @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
@@ -64,7 +64,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        | T_ID '(' ')' Stats T_END
         @{ 
-            @reg clean_slate();
+            @codegen clean_slate();
             @i @Stats.in_vars@ = NULL;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
@@ -74,7 +74,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        | T_ID '(' Pars ',' ')' Stats T_END
         @{ 
-            @reg clean_slate();
+            @codegen clean_slate();
             @i @Stats.in_vars@ = @Pars.vars@;
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
@@ -88,14 +88,14 @@ Pars: T_ID                           /* Parameterdefinition */
         @i @Pars.vars@ = table_add_param(NULL, @T_ID.name@, 1);
         @i @Pars.num_pars@ = 1;
 
-        @count record_param(1, @T_ID.name@);
+        @codegen record_param(1, @T_ID.name@);
     @}
     | Pars ',' T_ID 
     @{
         @i @Pars.0.vars@ = table_add_param(@Pars.1.vars@, @T_ID.name@, @Pars.0.num_pars@);
         @i @Pars.0.num_pars@ = @Pars.1.num_pars@ + 1;
 
-        @count record_param(@Pars.0.num_pars@, @T_ID.name@);
+        @codegen record_param(@Pars.0.num_pars@, @T_ID.name@);
     @}
     ;
 
