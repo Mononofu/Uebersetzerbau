@@ -107,7 +107,7 @@ epc:      expr                            # 0 #   /* constant folding: expressio
 epc:      OP_ADD(epc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 epc:      OP_ADD(imm, epc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value + bnode->kids[1]->value;
 expr:     OP_ADD(epc, epc)                # 1 # free_childs_alloc_reg(bnode); printf("\tlea %li(%%%s, %%%s, 1), %%%s\n", bnode->kids[0]->value + bnode->kids[1]->value, bnode->kids[0]->reg, bnode->kids[1]->reg, bnode->reg);
-expr:     epc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\tlea $%li(%%%s), %%%s\n", bnode->value, tmp, bnode->reg); }
+expr:     epc                             # 1 # { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\tlea %li(%%%s), %%%s\n", bnode->value, tmp, bnode->reg); }
 
 
 etc:      expr                            # 0 # bnode->value = 1;  /* constant folding: expression times constant */
