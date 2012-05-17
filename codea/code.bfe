@@ -100,7 +100,8 @@ expr:    OP_NOT(OP_LEQ(expr, imm))        # 3 # bnode->reg = newreg(); printf("\
 
 expr:    OP_ReadMem(expr)                 # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq (%%%s), %%%s\n", bnode->kids[0]->reg, bnode->reg);
 expr:    OP_ReadMem(imm)                  # 1 # bnode->reg = newreg(); printf("\tmovq ($%li), %%%s\n", bnode->kids[0]->value, bnode->reg);
-
+expr:    OP_ReadMem(OP_ADD(expr, imm))    # 1 # freereg(bnode->kids[0]->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq  %li(%%%s), %%%s\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg, bnode->reg);
+expr:    OP_ReadMem(OP_ADD(imm, expr))    # 1 # freereg(bnode->kids[0]->kids[1]->reg); bnode->reg = newreg(); printf("\tmovq  %li(%%%s), %%%s\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg, bnode->reg);
 
 
 epc:      expr                            # 0 #   /* constant folding: expression plus constant */
