@@ -178,7 +178,7 @@ Stat: T_RETURN Expr
         @codegen @revorder(1) start_if(@Stat.node@);
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
-        @codegen end_if(@Stat.node@, @Expr.immediate@);
+        @codegen end_if(@Expr.node@, @Expr.immediate@, @Stat.node@->param_index);
     @}
 
     | T_VAR T_ID '=' Expr               /* Variablendefinition */  

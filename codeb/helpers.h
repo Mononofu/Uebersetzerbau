@@ -26,7 +26,7 @@ void ret(void);
 void move(char *src, char *dst);
 char *get_8bit_reg(char* reg);
 void start_if(treenode* node);
-void end_if(treenode* node, int immediate);
+void end_if(treenode* node, int immediate, int if_no);
 void print_label(char* prefix, char* name, char* postfix);
 
 void freereg(char *reg);

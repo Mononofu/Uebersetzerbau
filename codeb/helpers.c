@@ -120,7 +120,7 @@ void start_if(treenode* node) {
   node->param_index = cur_if++;
 }
 
-void end_if(treenode* node, int immediate) {
+void end_if(treenode* node, int immediate, int if_no) {
   if(immediate) {
     if(node->value & 1)
       printf("/* end of if */\n");
@@ -128,7 +128,7 @@ void end_if(treenode* node, int immediate) {
       printf("*/\n");
   } 
   else {
-    printf("if_end_%d:\n", node->param_index);
+    printf("if_end_%d:\n", if_no);
   }
 }
 
