@@ -4,7 +4,7 @@
 #include "tree.h"
 #include "symbols.h"
 
-/* #define DEBUG_ME */
+#define DEBUG_ME
 
 
 struct var_usage {
