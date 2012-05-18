@@ -24,7 +24,14 @@ void function_header(char *name, symbol_t *params) {
     var_usage *var = (var_usage *)malloc(sizeof(var_usage));
     var->name = strdup(cur_parm->identifier);
     var->usage_count = 0;
-    var->reg = strdup( param_regs[cur_parm->param_index - 1] );
+    if(cur_parm->param_index == -1) {
+      /* alloc reg for variable */
+      var->reg = newreg();
+    }
+    else {
+      /* function args have predefined regs */
+      var->reg = strdup( param_regs[cur_parm->param_index - 1] );
+    }
 
     if(vars == NULL) {
       vars = var;
