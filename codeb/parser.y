@@ -176,7 +176,7 @@ Stat: T_RETURN Expr
         @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
 
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
-        @codegen @revorder start_if(@Expr.node@);
+        @codegen @revorder(1) start_if(@Expr.node@);
 
         @codegen end_if(@Expr.node@, @Expr.immediate@);
     @}
