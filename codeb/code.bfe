@@ -37,7 +37,7 @@ stat:    OP_IF(OP_NOT(OP_NEQ(expr, expr)))      # 2 # printf("\tcmpq %%%s, %%%s\
 stat:    OP_IF(OP_NOT(OP_NEQ(imm, expr)))       # 2 # printf("\tcmpq %%%s, $%li\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
 stat:    OP_IF(OP_NOT(OP_NEQ(expr, imm)))       # 2 # printf("\tcmpq $%li, %%%s\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg);
 
-stat:    OP_Assign(OP_ID, expr)           # 0 # bnode->reg = reg_for_var(bnode->kids[0]->name); move(bnode->kids[1]->reg, bnode->reg); freereg(bnode->kids[1]->reg);
+stat:    OP_Assign(OP_ID, expr)           # 1 # bnode->reg = reg_for_var(bnode->kids[0]->name); move(bnode->kids[1]->reg, bnode->reg); freereg(bnode->kids[1]->reg);cat 
 stat:    OP_Assign(expr, expr)            # 1 # printf("\tmovq %%%s, (%%%s)\n", bnode->kids[1]->reg, bnode->kids[0]->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); 
 stat:    OP_Assign(imm, expr)             # 1 # printf("\tmovq %%%s, %li()\n", bnode->kids[1]->reg, bnode->kids[0]->value);  freereg(bnode->kids[1]->reg); 
 stat:    OP_Assign(imm, imm)              # 1 # printf("\tmovq $%li, %li()\n", bnode->kids[1]->value, bnode->kids[0]->value);
