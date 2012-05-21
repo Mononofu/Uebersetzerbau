@@ -238,7 +238,7 @@ Lexpr: T_ID        /* schreibender Variablenzugriff */
         @i @Unary.vars@ = @Lexpr.vars@; 
         @i @Lexpr.immediate@ = @Unary.immediate@;
 
-        @i @Lexpr.node@ = @Unary.node@;
+        @i @Lexpr.node@ = new_node(OP_WriteMem, @Unary.node@, (treenode *) NULL);
     @}
      ;  
  
