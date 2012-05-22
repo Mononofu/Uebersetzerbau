@@ -95,16 +95,6 @@ expr:    OP_LEQ(expr, expr)               # 3 # bnode->reg = newreg(); printf("\
 expr:    OP_LEQ(imm, expr)                # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); printf("\tsetle %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[1]->reg); 
 expr:    OP_LEQ(expr, imm)                # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); printf("\tsetle %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->reg); 
 
-expr:    OP_NOT(OP_NEQ(expr, expr))       # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq %%%s, %%%s\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_NEQ(imm, expr))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_NEQ(expr, imm))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); 
-
-
-expr:    OP_NOT(OP_LEQ(expr, expr))       # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq %%%s, %%%s\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_LEQ(imm, expr))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_LEQ(expr, imm))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); 
-
-
 
 expr:    OP_ReadMem(expr)                 # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq (%%%s), %%%s\n", bnode->kids[0]->reg, bnode->reg);
 expr:    OP_ReadMem(imm)                  # 1 # bnode->reg = newreg(); printf("\tmovq ($%li), %%%s\n", bnode->kids[0]->value, bnode->reg);
