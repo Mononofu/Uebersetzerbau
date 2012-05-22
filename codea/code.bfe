@@ -14,7 +14,7 @@
 %}
 
 %start stat
-%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_NEG=12 OP_ID=13 OP_Number=14 OP_Field=15 OP_Return=16 OP_Zero=17 OP_One=18 OP_Args=19 OP_Call=20 OP_ReadMem=21 OP_IF=22 OP_Stats=23 OP_NOP=24 OP_Assign=25
+%term OP_NOT=1 OP_AND=2 OP_OR=3 OP_EQ=4 OP_GT=5 OP_GEQ=6 OP_LS=7 OP_LEQ=8 OP_NEQ=9 OP_ADD=10 OP_MUL=11 OP_NEG=12 OP_ID=13 OP_Number=14 OP_Field=15 OP_Return=16 OP_Zero=17 OP_One=18 OP_Args=19 OP_Call=20 OP_ReadMem=21 OP_IF=22 OP_Stats=23 OP_NOP=24 OP_Assign=25 OP_WriteMem=26
 
 %%
 
@@ -37,10 +37,11 @@ stat:    OP_IF(OP_NOT(OP_NEQ(expr, expr)))      # 2 # printf("\tcmpq %%%s, %%%s\
 stat:    OP_IF(OP_NOT(OP_NEQ(imm, expr)))       # 2 # printf("\tcmpq %%%s, $%li\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->kids[0]->value,  bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[1]->reg); 
 stat:    OP_IF(OP_NOT(OP_NEQ(expr, imm)))       # 2 # printf("\tcmpq $%li, %%%s\n\tjne if_end_%d\n", bnode->kids[0]->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->kids[0]->reg, bnode->param_index); freereg(bnode->kids[0]->kids[0]->kids[0]->reg);
 
-stat:    OP_Assign(OP_ID, expr)           # 0 # bnode->reg = reg_for_var(bnode->kids[0]->name); move(bnode->kids[1]->reg, bnode->reg); freereg(bnode->kids[1]->reg);
-stat:    OP_Assign(expr, expr)            # 1 # printf("\tmovq %%%s, (%%%s)\n", bnode->kids[1]->reg, bnode->kids[0]->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); 
-stat:    OP_Assign(imm, expr)             # 1 # printf("\tmovq %%%s, %li()\n", bnode->kids[1]->reg, bnode->kids[0]->value);  freereg(bnode->kids[1]->reg); 
-stat:    OP_Assign(imm, imm)              # 1 # printf("\tmovq $%li, %li()\n", bnode->kids[1]->value, bnode->kids[0]->value);
+stat:    OP_Assign(OP_ID, expr)               # 1 # bnode->reg = reg_for_var(bnode->kids[0]->name); move(bnode->kids[1]->reg, bnode->reg); freereg(bnode->kids[1]->reg);
+stat:    OP_Assign(OP_WriteMem(expr), expr)   # 1 # printf("\tmovq %%%s, (%%%s)\n", bnode->kids[1]->reg, bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[1]->reg); 
+stat:    OP_Assign(OP_WriteMem(imm), expr)    # 1 # printf("\tmovq %%%s, %li()\n", bnode->kids[1]->reg, bnode->kids[0]->kids[0]->value);  freereg(bnode->kids[1]->reg); 
+stat:    OP_Assign(OP_WriteMem(imm), imm)     # 1 # printf("\tmovq $%li, %li()\n", bnode->kids[1]->value, bnode->kids[0]->kids[0]->value);
+
 
 ret:     OP_Return(expr)                  # 1 # freereg(bnode->kids[0]->reg); move(bnode->kids[0]->reg, "rax"); ret(); 
 ret:     OP_Return(imm)                   # 1 # printf("\tmovq $%li, %%rax\n", bnode->kids[0]->value); ret();
@@ -94,16 +95,6 @@ expr:    OP_LEQ(expr, expr)               # 3 # bnode->reg = newreg(); printf("\
 expr:    OP_LEQ(imm, expr)                # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->value, bnode->kids[1]->reg); printf("\tsetle %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[1]->reg); 
 expr:    OP_LEQ(expr, imm)                # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[1]->value, bnode->kids[0]->reg); printf("\tsetle %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->reg); 
 
-expr:    OP_NOT(OP_NEQ(expr, expr))       # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq %%%s, %%%s\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_NEQ(imm, expr))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_NEQ(expr, imm))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); printf("\tsete %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); 
-
-
-expr:    OP_NOT(OP_LEQ(expr, expr))       # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq %%%s, %%%s\n", bnode->kids[0]->kids[1]->reg, bnode->kids[0]->kids[0]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_LEQ(imm, expr))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[0]->value, bnode->kids[0]->kids[1]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[1]->reg); 
-expr:    OP_NOT(OP_LEQ(expr, imm))        # 3 # bnode->reg = newreg(); printf("\txor %%%s, %%%s\n", bnode->reg, bnode->reg);  printf("\tcmpq $%li, %%%s\n", bnode->kids[0]->kids[1]->value, bnode->kids[0]->kids[0]->reg); printf("\tsetg %%%s\n", get_8bit_reg(bnode->reg)); freereg(bnode->kids[0]->kids[0]->reg); 
-
-
 
 expr:    OP_ReadMem(expr)                 # 1 # freereg(bnode->kids[0]->reg); bnode->reg = newreg(); printf("\tmovq (%%%s), %%%s\n", bnode->kids[0]->reg, bnode->reg);
 expr:    OP_ReadMem(imm)                  # 1 # bnode->reg = newreg(); printf("\tmovq ($%li), %%%s\n", bnode->kids[0]->value, bnode->reg);
@@ -119,6 +110,7 @@ expr:     epc                             # 1 # { if(bnode->value != 0) { char* 
 
 
 etc:      expr                            # 0 # bnode->value = 1;  /* constant folding: expression times constant */
+etc:      OP_NEG(expr)                    # 0 # bnode->value = -1; bnode->reg = bnode->kids[0]->reg;
 etc:      OP_MUL(etc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 etc:      OP_MUL(imm, etc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 expr:     OP_MUL(etc, etc)                # 2 # bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); printf("\timul %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg);
