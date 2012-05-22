@@ -120,6 +120,7 @@ expr:     epc                             # 1 # { if(bnode->value != 0) { char* 
 
 
 etc:      expr                            # 0 # bnode->value = 1;  /* constant folding: expression times constant */
+etc:      OP_NEG(expr)                    # 0 # bnode->value = -1;
 etc:      OP_MUL(etc, imm)                # 0 # bnode->reg = bnode->kids[0]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 etc:      OP_MUL(imm, etc)                # 0 # bnode->reg = bnode->kids[1]->reg; bnode->value = bnode->kids[0]->value * bnode->kids[1]->value;
 expr:     OP_MUL(etc, etc)                # 2 # bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); printf("\timul %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg);
