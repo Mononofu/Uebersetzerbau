@@ -168,10 +168,6 @@ void claimreg(char *reg) {
   reg_usage[i] += 1;
 }
 
-char* newreg() {
-  newreg_with_usage_count(1);
-}
-
 char* newreg_with_usage_count(int count) {
   int i = 0;
 
@@ -186,6 +182,10 @@ char* newreg_with_usage_count(int count) {
 
   reg_usage[i] += count;
   return regs[i];
+}
+
+char* newreg() {
+  newreg_with_usage_count(1);
 }
 
 void dump_usage() {
