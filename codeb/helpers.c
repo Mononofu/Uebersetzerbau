@@ -219,6 +219,10 @@ int get_reg_usage(char *reg) {
 
 /* called once for each time a variable is seen */
 void record_var_usage(char* name) {
+#ifdef DEBUG_ME
+  printf("Encountered var %s\n", name);
+#endif
+  
   var_usage *cur_var = vars;
   var_usage *prev;
 
