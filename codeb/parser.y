@@ -50,7 +50,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        |T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
         @{ 
-            @i @Stats.in_vars@ = @Pars.vars@;
+            @i @Stats.in_vars@ = clone_table(@Pars.vars@);
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
@@ -68,7 +68,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
 
        | T_ID '(' Pars ',' ')' Stats T_END
         @{ 
-            @i @Stats.in_vars@ = @Pars.vars@;
+            @i @Stats.in_vars@ = clone_table(@Pars.vars@);
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
