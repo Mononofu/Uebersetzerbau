@@ -20,7 +20,6 @@
 @attributes { struct symbol_t *in; struct symbol_t *out; struct symbol_t *vars; } Labeldef
 
 @traversal @postorder check
-@traversal @preorder reg
 @traversal @preorder count
 @traversal @postorder codegen
 
@@ -143,8 +142,6 @@ Stat: T_RETURN Expr
         @i @Stat.out_labels@ = @Stat.in_labels@;
 
         @i @Stat.node@ = new_node(OP_Return, @Expr.node@, (treenode *)NULL);
-        
-        @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
 
         @codegen burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
     @}
@@ -173,7 +170,6 @@ Stat: T_RETURN Expr
         @i @Stat.out_labels@ = @Stats.out_labels@;
 
         @i @Stat.node@ = new_node(OP_IF, @Expr.node@, @Stats.node@);
-        @reg @Stat.node@->reg = get_next_reg((char *)NULL, 0); @Expr.node@->reg = @Stat.node@->reg;
 
         @codegen @revorder(1) start_if(@Stat.node@);
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
@@ -232,7 +228,7 @@ Lexpr: T_ID        /* schreibender Variablenzugriff */
         @i @Lexpr.immediate@ = 0;
 
         @i @Lexpr.node@ = new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0);
-        
+
         @codegen record_var_usage(@T_ID.name@);
     @}
 
@@ -250,8 +246,6 @@ Expr: Unary
         @i @Unary.vars@ = @Expr.vars@; 
         @i @Expr.node@ = @Unary.node@;
         @i @Expr.immediate@ = @Unary.immediate@;
-
-        @reg @Unary.node@->reg = @Expr.node@->reg;
     @}
 
     | PlusExpr  
@@ -259,8 +253,6 @@ Expr: Unary
         @i @PlusExpr.vars@ = @Expr.vars@; 
         @i @Expr.node@ = @PlusExpr.node@;
         @i @Expr.immediate@ = @PlusExpr.immediate@;
-
-        @reg @PlusExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | MultExpr
@@ -268,8 +260,6 @@ Expr: Unary
         @i @MultExpr.vars@ = @Expr.vars@;
         @i @Expr.node@ = @MultExpr.node@;
         @i @Expr.immediate@ = @MultExpr.immediate@;
-
-        @reg @MultExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | AndExpr
@@ -277,8 +267,6 @@ Expr: Unary
         @i @AndExpr.vars@ = @Expr.vars@;
         @i @Expr.node@ = @AndExpr.node@;
         @i @Expr.immediate@ = @AndExpr.immediate@;
-
-        @reg @AndExpr.node@->reg = @Expr.node@->reg;
     @}
 
     | Term T_LEQ Term 
@@ -289,7 +277,6 @@ Expr: Unary
         @i @Expr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
         @i @Expr.node@ = new_node(OP_LEQ, @Term.0.node@, @Term.1.node@);        
 
-        @reg @Term.0.node@->reg = @Expr.node@->reg; @Term.1.node@->reg = get_next_reg(@Expr.node@->reg, @Expr.node@->skip_reg);
     @}
 
     | Term '#' Term 
@@ -299,8 +286,6 @@ Expr: Unary
 
         @i @Expr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
         @i @Expr.node@ = new_node(OP_NEQ, @Term.0.node@, @Term.1.node@);
-
-        @reg @Term.0.node@->reg = @Expr.node@->reg; @Term.1.node@->reg = get_next_reg(@Expr.node@->reg, @Expr.node@->skip_reg);
     @}
     ;  
 
@@ -311,8 +296,6 @@ PlusExpr: Term '+' Term
 
             @i @PlusExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @PlusExpr.node@ = new_node(OP_ADD, @Term.0.node@, @Term.1.node@);
-
-            @reg @Term.0.node@->reg = @PlusExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@PlusExpr.node@->reg, @PlusExpr.node@->skip_reg);
          @}
 
         | PlusExpr '+' Term
@@ -322,8 +305,6 @@ PlusExpr: Term '+' Term
 
             @i @PlusExpr.0.immediate@ = @PlusExpr.1.immediate@ && @Term.immediate@;
             @i @PlusExpr.0.node@ = new_node(OP_ADD, @PlusExpr.1.node@, @Term.node@);
-
-            @reg @Term.node@->reg = @PlusExpr.0.node@->reg; @PlusExpr.1.node@->reg = get_next_reg(@PlusExpr.0.node@->reg, @PlusExpr.node@->skip_reg);
          @}
         ;
 
@@ -334,8 +315,6 @@ MultExpr: Term '*' Term
 
             @i @MultExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @MultExpr.node@ = new_node(OP_MUL, @Term.0.node@, @Term.1.node@);
-
-            @reg @Term.0.node@->reg = @MultExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@MultExpr.node@->reg, @MultExpr.node@->skip_reg);
          @}
 
         | MultExpr '*' Term
@@ -345,8 +324,6 @@ MultExpr: Term '*' Term
 
             @i @MultExpr.0.immediate@ = @MultExpr.1.immediate@ && @Term.immediate@;
             @i @MultExpr.0.node@ = new_node(OP_MUL, @MultExpr.1.node@, @Term.node@);
-
-            @reg @Term.node@->reg = @MultExpr.0.node@->reg; @MultExpr.1.node@->reg = get_next_reg(@MultExpr.0.node@->reg, @MultExpr.node@->skip_reg);
          @}
         ;
 
@@ -357,8 +334,6 @@ AndExpr: Term T_AND Term
 
             @i @AndExpr.immediate@ = @Term.0.immediate@ && @Term.1.immediate@;
             @i @AndExpr.node@ = (@Term.0.node@->op == OP_ID && @Term.1.node@->op == OP_ID && strcmp(@Term.0.node@->name, @Term.1.node@->name) == 0) ? @Term.0.node@ : new_node(OP_AND, @Term.0.node@, @Term.1.node@);
-
-            @reg @Term.0.node@->reg = @AndExpr.node@->reg; @Term.1.node@->reg = get_next_reg(@AndExpr.node@->reg, @AndExpr.node@->skip_reg);
         @} 
 
         | AndExpr T_AND Term
@@ -367,9 +342,7 @@ AndExpr: Term T_AND Term
             @i @AndExpr.1.vars@ = @AndExpr.0.vars@;
 
             @i @AndExpr.0.immediate@ = @AndExpr.1.immediate@ && @Term.immediate@;
-            @i @AndExpr.0.node@ = new_node(OP_AND, @AndExpr.1.node@, @Term.node@);
-
-            @reg @Term.node@->reg = @AndExpr.0.node@->reg; @AndExpr.1.node@->reg = get_next_reg(@AndExpr.0.node@->reg, @AndExpr.node@->skip_reg);            
+            @i @AndExpr.0.node@ = new_node(OP_AND, @AndExpr.1.node@, @Term.node@);         
         @} 
         ;
  
@@ -379,8 +352,6 @@ Unary: T_NOT T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = @Unary.1.node@;
-
-            @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
      | T_NOT Unary 
@@ -389,8 +360,6 @@ Unary: T_NOT T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = new_node(OP_NOT, @Unary.1.node@, (treenode *) NULL);
-
-            @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
      | '-' '-' Unary
@@ -399,8 +368,6 @@ Unary: T_NOT T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = @Unary.1.node@;
-
-            @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
      | '-' Unary
@@ -409,8 +376,6 @@ Unary: T_NOT T_NOT Unary
 
             @i @Unary.0.immediate@ = @Unary.1.immediate@;
             @i @Unary.0.node@ = new_node(OP_NEG, @Unary.1.node@, (treenode *) NULL);
-
-            @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
      | '*' Unary   /* lesender Speicherzugriff */  
@@ -419,8 +384,6 @@ Unary: T_NOT T_NOT Unary
 
             @i @Unary.0.immediate@ = 0;
             @i @Unary.0.node@ = new_node(OP_ReadMem, @Unary.1.node@, (treenode *) NULL);
-
-            @reg @Unary.1.node@->reg = @Unary.0.node@->reg;
         @}
 
      | Term 
@@ -429,8 +392,6 @@ Unary: T_NOT T_NOT Unary
 
         @i @Unary.node@ = @Term.node@;
         @i @Unary.immediate@ = @Term.immediate@;
-
-        @reg @Term.node@->reg = @Unary.node@->reg;
     @} 
      ;  
  
