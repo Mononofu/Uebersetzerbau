@@ -169,6 +169,10 @@ void claimreg(char *reg) {
 }
 
 char* newreg() {
+  newreg_with_usage_count(1);
+}
+
+char* newreg_with_usage_count(int count) {
   int i = 0;
 
   while(i < 9 && reg_usage[i] != 0) {
@@ -180,7 +184,7 @@ char* newreg() {
     exit(4);
   }
 
-  reg_usage[i] += 1;
+  reg_usage[i] += count;
   return regs[i];
 }
 
@@ -210,7 +214,7 @@ char* reg_for_var(char* name) {
   } 
   else {
     if(cur_var->reg == NULL) {
-      cur_var->reg = newreg();
+      cur_var->reg = newreg_with_usage_count(cur_var->usage_count);
     }
     return cur_var->reg;
   }
