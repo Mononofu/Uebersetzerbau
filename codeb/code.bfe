@@ -43,6 +43,10 @@ stat:    OP_Assign(OP_WriteMem(expr), expr)   # 1 # printf("\tmovq %%%s, (%%%s)\
 stat:    OP_Assign(OP_WriteMem(imm), expr)    # 1 # printf("\tmovq %%%s, %li()\n", bnode->kids[1]->reg, bnode->kids[0]->kids[0]->value);  freereg(bnode->kids[1]->reg); 
 stat:    OP_Assign(OP_WriteMem(imm), imm)     # 1 # printf("\tmovq $%li, %li()\n", bnode->kids[1]->value, bnode->kids[0]->kids[0]->value);
 
+stat:    OP_Assign(OP_ID, OP_ADD(epc, epc)) # 1 # bnode->reg = reg_for_var(bnode->kids[0]->name); printf("\tlea %li(%%%s, %%%s, 1), %%%s\n", bnode->kids[1]->kids[0]->value + bnode->kids[1]->kids[1]->value, bnode->kids[1]->kids[0]->reg, bnode->kids[1]->kids[1]->reg, bnode->reg); freereg(bnode->reg); freereg(bnode->kids[1]->kids[0]->reg); freereg(bnode->kids[1]->kids[1]->reg);
+stat:    OP_Assign(OP_ID, epc)      # 1 # bnode->reg = reg_for_var(bnode->kids[0]->name); printf("\tlea %li(%%s), %%s\n", bnode->kids[1]->value, bnode->kids[1]->reg, bnode->reg); freereg(bnode->reg); freereg(bnode->kids[1]->reg);
+stat:    OP_Assign(OP_ID, etc)      # 1 # bnode->reg = reg_for_var(bnode->kids[0]->name); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[1]->value, bnode->kids[1]->reg, bnode->reg); freereg(bnode->reg); freereg(bnode->kids[1]->reg);
+
 
 ret:     OP_Return(expr)                  # 1 # freereg(bnode->kids[0]->reg); move(bnode->kids[0]->reg, "rax"); ret(); 
 ret:     OP_Return(imm)                   # 1 # printf("\tmovq $%li, %%rax\n", bnode->kids[0]->value); ret();
