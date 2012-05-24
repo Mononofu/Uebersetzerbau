@@ -9,7 +9,7 @@ int reg_usage[] = {0,     0,     0,    0,    0,     0,     0,     0,     0};
 char *param_regs[]={"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
 var_usage *vars;
 
-void function_header(char *name, symbol_t *params) {
+void function_header(char *name, symbol_t *params, treenode* stats) {
   /* clean regs */
   int i;
   for(i = 0; i < 9; ++i)
@@ -24,9 +24,9 @@ void function_header(char *name, symbol_t *params) {
     var_usage *var = (var_usage *)malloc(sizeof(var_usage));
     var->name = strdup(cur_parm->identifier);
     var->usage_count = 0;
-    if(cur_parm->param_index == -1) {
-      /* vars don't get registers yet because they might not even be in scope */
-      var->reg = NULL;
+    if(cur_parm->param_index <= 0) {
+      printf("Error - var should not be in list of parmams: %s\n", var->name);
+      exit(4);
     }
     else {
       /* function args have predefined regs, so allocate them now */
@@ -44,10 +44,25 @@ void function_header(char *name, symbol_t *params) {
     cur_parm = cur_parm->next;
   } 
 
+  /* walk tree of stats to count var usages */
+  count_names(stats);
+
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
   /* store name of current function to prefix jump labels */
   strcpy(cur_function, name);
+}
+
+void count_names(treenode *node) {
+  if(node->op == OP_ID)
+    /* got a name! */
+    record_var_usage(node->name);
+
+  if(node->kids[0] != NULL)
+    count_names(node->kids[0]);
+
+  if(node->kids[1] != NULL)
+    count_names(node->kids[1]);
 }
 
 char *get_8bit_reg(char* reg) {
@@ -222,7 +237,7 @@ void record_var_usage(char* name) {
 #ifdef DEBUG_ME
   printf("Encountered var %s\n", name);
 #endif
-  
+
   var_usage *cur_var = vars;
   var_usage *prev;
 

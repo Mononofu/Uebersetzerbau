@@ -37,15 +37,15 @@ Program: Program Funcdef ';'
  
 Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without body */
         @{
-            @codegen function_header(@T_ID.name@, @Pars.vars@); imm_ret();
+            @codegen function_header(@T_ID.name@, @Pars.vars@, NULL); imm_ret();
         @}
        | T_ID '(' Pars ',' ')' T_END
         @{ 
-            @codegen function_header(@T_ID.name@, @Pars.vars@); imm_ret();
+            @codegen function_header(@T_ID.name@, @Pars.vars@, NULL); imm_ret();
         @}
        | T_ID '(' ')' T_END
         @{ 
-            @codegen function_header(@T_ID.name@, NULL); imm_ret();
+            @codegen function_header(@T_ID.name@, NULL, NULL); imm_ret();
         @}
 
        |T_ID '(' Pars ')' Stats T_END  /* Funktionsdefinition */  
@@ -54,7 +54,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
-            @codegen @revorder(1) function_header(@T_ID.name@, @Pars.vars@);
+            @codegen @revorder(1) function_header(@T_ID.name@, @Pars.vars@, @Stats.node@);
         @}
 
        | T_ID '(' ')' Stats T_END
@@ -63,7 +63,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
-            @codegen @revorder(1) function_header(@T_ID.name@, NULL);
+            @codegen @revorder(1) function_header(@T_ID.name@, NULL, @Stats.node@);
         @}
 
        | T_ID '(' Pars ',' ')' Stats T_END
@@ -72,7 +72,7 @@ Funcdef: T_ID '(' Pars ')' T_END            /* special case for funs without bod
             @i @Stats.in_labels@ = NULL; 
             @i @Stats.labels@ = @Stats.out_labels@; 
 
-            @codegen @revorder(1) function_header(@T_ID.name@, @Pars.vars@);
+            @codegen @revorder(1) function_header(@T_ID.name@, @Pars.vars@, @Stats.node@);
         @}
        ;  
  
@@ -187,7 +187,6 @@ Stat: T_RETURN Expr
 
         @i @Stat.node@ = new_node(OP_Assign, new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0), @Expr.node@);
 
-        @codegen record_var_usage(@T_ID.name@);
         @codegen @revorder(1) burm_label(@Stat.node@); burm_reduce(@Stat.node@, 1);
 
     @}
@@ -228,8 +227,6 @@ Lexpr: T_ID        /* schreibender Variablenzugriff */
         @i @Lexpr.immediate@ = 0;
 
         @i @Lexpr.node@ = new_named_leaf_value(OP_ID, @T_ID.name@, 0, 0);
-
-        @codegen record_var_usage(@T_ID.name@);
     @}
 
      | '*' Unary /* schreibender Speicherzugriff */  
@@ -415,8 +412,6 @@ Term: '(' Expr ')'
         @i @Term.node@ = new_named_leaf_value(OP_ID, @T_ID.name@, (table_lookup(@Term.vars@, @T_ID.name@)==NULL) ? 0 : table_lookup(@Term.vars@, @T_ID.name@)->stack_offset, (table_lookup(@Term.vars@, @T_ID.name@)==NULL) ? 0 : table_lookup(@Term.vars@, @T_ID.name@)->param_index);
 
         @check check_variable_exists(@Term.vars@, @T_ID.name@); 
-
-        @codegen record_var_usage(@T_ID.name@);
     @}
 
     | T_ID '(' Args ')'                  /* Funktionsaufruf */  
