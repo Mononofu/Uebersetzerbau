@@ -25,11 +25,11 @@ void function_header(char *name, symbol_t *params) {
     var->name = strdup(cur_parm->identifier);
     var->usage_count = 0;
     if(cur_parm->param_index == -1) {
-      /* alloc reg for variable */
-      var->reg = newreg();
+      /* vars don't get registers yet because they might not even be in scope */
+      var->reg = NULL;
     }
     else {
-      /* function args have predefined regs */
+      /* function args have predefined regs, so allocate them now */
       var->reg = strdup( param_regs[cur_parm->param_index - 1] );
     }
 
@@ -44,32 +44,10 @@ void function_header(char *name, symbol_t *params) {
     cur_parm = cur_parm->next;
   } 
 
-  init_reg_usage();
-  dump_usage();
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
   /* store name of current function to prefix jump labels */
   strcpy(cur_function, name);
-}
-
-char *get_next_reg(char *name, int skip_reg) {
-  char *reg_names[]={"rax", "r10", "r11", "r9", "r8", "rcx", "rdx", "rsi", "rdi"};
-  int index, a;
-  if(name==(char *)NULL) {
-    index=0;
-  }
-  else {
-    for(a=0;a<9;a++) {
-      if(!strcmp(name,reg_names[a])) {
-        index=a+1;
-        break;
-      }
-    }
-  }
-  if(skip_reg) {
-    index++;
-  }
-  return reg_names[index];
 }
 
 char *get_8bit_reg(char* reg) {
@@ -216,25 +194,11 @@ char* reg_for_var(char* name) {
     exit(4);
   } 
   else {
+    if(cur_var->reg == NULL) {
+      cur_var->reg = newreg();
+    }
     return cur_var->reg;
   }
-
-    /*while(i < 9 && reg_usage[i] != 0) {
-      ++i;
-    }
-
-    if(reg_usage[i] != 0) {
-      printf("not enough registers!\n");
-      exit(4);
-    }
-
-    var_usage *cur_var = vars;
-    while(cur_var != NULL && strcmp(cur_var->name, name) != 0) {
-      cur_var = cur_var->next;
-    }
-
-    reg_usage[i] += cur_var->usage_count;
-    return regs[i];*/
 }
 
 
@@ -279,17 +243,6 @@ void record_var_usage(char* name) {
     cur_var->usage_count += 1;
   }
 
-}
-
-char *get_param_reg(long number) {
-#ifdef DEBUG_ME
-  if(number == 0) {
-    printf("trying to acces negative param reg: %d\n", number);
-  }
-#endif
-
-  char *reg_names[]={"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
-  return reg_names[number-1];
 }
 
 void free_childs_alloc_reg(treenode* node) {
