@@ -45,7 +45,8 @@ void function_header(char *name, symbol_t *params, treenode* stats) {
   } 
 
   /* walk tree of stats to count var usages */
-  count_names(stats);
+  if(stats != NULL)
+    count_names(stats);
 
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
