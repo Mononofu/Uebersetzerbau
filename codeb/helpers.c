@@ -45,6 +45,7 @@ void function_header(char *name, symbol_t *params) {
   } 
 
   init_reg_usage();
+  dump_usage();
   printf("\n\t.globl %s\n\t.type %s, @function\n%s:\n", name, name, name);
 
   /* store name of current function to prefix jump labels */
