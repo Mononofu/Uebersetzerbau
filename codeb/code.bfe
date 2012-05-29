@@ -142,13 +142,14 @@ zexpr:    OP_ID                           # 0 #
 imm:    zero                              # 0 #
 imm:    OP_NEG(imm)                       # 0 # bnode->value= - (bnode->kids[0]->value);
 imm:    OP_NOT(imm)                       # 0 # bnode->value= ~ (bnode->kids[0]->value);
-imm:    OP_ADD(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value+bnode->kids[1]->value;
-imm:    OP_MUL(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value*bnode->kids[1]->value;
+imm:    OP_ADD(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value + bnode->kids[1]->value;
+imm:    OP_MUL(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value * bnode->kids[1]->value;
+imm:    OP_AND(imm,imm)                   # 0 # bnode->value=bnode->kids[0]->value & bnode->kids[1]->value;
+imm:    OP_LEQ(imm,imm)                   # 0 # bnode->value = bnode->kids[0]->value <= bnode->kids[1]->value;
+imm:    OP_NEQ(imm,imm)                   # 0 # bnode->value = bnode->kids[0]->value != bnode->kids[1]->value;
 imm:    OP_Number                         # 0 # 
 imm:    OP_Zero                           # 0 # 
 imm:    OP_One                            # 0 # 
-imm:    OP_LEQ(imm,imm)                   # 0 # bnode->value = bnode->kids[0]->value <= bnode->kids[1]->value;
-imm:    OP_NEQ(imm,imm)                   # 0 # bnode->value = bnode->kids[0]->value != bnode->kids[1]->value;
 
 %%
 
