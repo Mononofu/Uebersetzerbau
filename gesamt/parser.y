@@ -433,7 +433,7 @@ Term: '(' Expr ')'
     | T_ID '(' ')' 
     @{
         @i @Term.immediate@ = 0;
-        @i @Term.node@ = new_node(OP_Call, new_named_leaf(OP_ID, @T_ID.name@), NULL);
+        @i @Term.node@ = new_node(OP_Call, new_named_leaf(OP_ID, @T_ID.name@), new_leaf(OP_NOP));
     @}
     ;
 
@@ -441,7 +441,7 @@ Args: Expr
     @{ 
         @i @Expr.vars@ = @Args.vars@; 
 
-        @i @Args.node@ = NULL;
+        @i @Args.node@ = @Expr.node@;
         @i @Args.immediate@ = @Expr.immediate@;
     @} 
     | Args ',' Expr 
