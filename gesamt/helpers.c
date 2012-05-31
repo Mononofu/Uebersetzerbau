@@ -25,7 +25,7 @@ void function_header(char *name, symbol_t *params, treenode* stats) {
     var->name = strdup(cur_parm->identifier);
     var->usage_count = 0;
     if(cur_parm->param_index <= 0) {
-      printf("Error - var should not be in list of parmams: %s\n", var->name);
+      printf("Error - var should not be in list of parnames: %s\n", var->name);
       exit(4);
     }
     else {
@@ -265,6 +265,12 @@ void record_var_usage(char* name) {
   }
   else {
     cur_var->usage_count += 1;
+    if(cur_var->reg != NULL) {
+      /* at this point, only params have registers set
+       * normal vars set their reg usage at first use, 
+       * for parms we need to do it now */
+      claimreg(cur_var->reg);
+    }
   }
 
 }
