@@ -321,6 +321,7 @@ void set_params(treenode* node) {
   treenode* cur = node;
   treenode* expr;
   int num_params = 1;
+  int stack_ctr = 1;
 
   /* count params */
   while(cur->op == OP_Args) {
@@ -333,13 +334,12 @@ void set_params(treenode* node) {
   while(cur->op == OP_Args) {
     expr = cur->kids[1];
     /* use values from stack to set param regs */
-    printf("\tmovq -%d(%%rbp), %%%s\n", 8*num_params, param_regs[num_params-1]);
-    num_params -= 1;
+    printf("\tmovq -%d(%%rbp), %%%s\n", 8*stack_ctr++, param_regs[--num_params]);
 
     cur = cur->kids[0];
   }
 
-  printf("\tmovq -8(%%rbp), %%%s\n", param_regs[num_params-1]);
+  printf("\tmovq -%d(%%rbp), %%%s\n", stack_ctr, param_regs[--num_params]);
 
 }
 
