@@ -345,12 +345,12 @@ void set_params(treenode* node) {
   while(cur->op == OP_Args) {
     expr = cur->kids[1];
     /* use values from stack to set param regs */
-    printf("\tmovq -%d(%%rbp), %%%s\n", 8*saved_reg_offset(expr->reg), param_regs[--num_params]);
+    printf("\tmovq -%d(%%rsp), %%%s\n", 8*saved_reg_offset(expr->reg), param_regs[--num_params]);
 
     cur = cur->kids[0];
   }
 
-  printf("\tmovq -%d(%%rbp), %%%s\n", 8*saved_reg_offset(cur->reg), param_regs[--num_params]);
+  printf("\tmovq -%d(%%rsp), %%%s\n", 8*saved_reg_offset(cur->reg), param_regs[--num_params]);
 
 }
 
