@@ -301,6 +301,7 @@ void init_reg_usage() {
 
 /* function call helpers */
 void save_regs() {
+  int i;
   printf("/* save registers */\n");
   for(i = 0; i < 9; ++i) {
     if(reg_usage[i] != 0) {
@@ -315,6 +316,7 @@ void call_func(char* name) {
 }
 
 void restore_regs() {
+  int i;
   printf("/* restorte registers */\n");
   for(i = 8; i >= 0; --i) {
     if(reg_usage[i] != 0) {
