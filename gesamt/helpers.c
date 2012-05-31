@@ -297,3 +297,28 @@ void init_reg_usage() {
     cur_var = cur_var->next;
   }
 }
+
+
+/* function call helpers */
+void save_regs() {
+  printf("/* save registers */\n")
+  for(i = 0; i < 9; ++i) {
+    if(reg_usage[i] != 0) {
+      printf("\tpush %%%s\n", regs[i]);
+    }  
+  }
+}
+
+void call_func(char* name) {
+  printf("/* call %s */\n", name);
+  printf("\tcall %s\n", name);
+}
+
+void restore_regs() {
+  printf("/* restorte registers */\n")
+  for(i = 8; i >= 0; --i) {
+    if(reg_usage[i] != 0) {
+      printf("\tpop %%%s\n", regs[i]);
+    }  
+  }
+}

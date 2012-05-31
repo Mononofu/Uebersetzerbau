@@ -42,4 +42,9 @@ void free_childs_alloc_reg(treenode* node);
 
 void dump_usage();
 
+/* function call helpers */
+void save_regs();
+void call_func(char* name);
+void restore_regs();
+
 #endif
