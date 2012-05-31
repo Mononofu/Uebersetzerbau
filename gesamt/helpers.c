@@ -311,6 +311,7 @@ void save_regs() {
 }
 
 void set_params(treenode* node) {
+  printf("/* set params */\n");
   treenode* cur = node;
   treenode* expr;
   int num_params = 1;
@@ -329,7 +330,7 @@ void set_params(treenode* node) {
 
     cur = cur->kids[0];
   }
-  
+
   expr = cur->kids[1];
   printf("\tmovq %%%s, %%%s\n", expr->reg, param_regs[--num_params]);
 
@@ -342,7 +343,7 @@ void call_func(char* name) {
 
 void restore_regs() {
   int i;
-  printf("/* restorte registers */\n");
+  printf("/* restore registers */\n");
   for(i = 8; i >= 0; --i) {
     if(reg_usage[i] != 0) {
       printf("\tpop %%%s\n", regs[i]);
