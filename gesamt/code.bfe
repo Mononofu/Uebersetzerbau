@@ -121,7 +121,7 @@ etc:      OP_MUL(imm, etc)                # 0 # bnode->reg = bnode->kids[1]->reg
 expr:     OP_MUL(etc, etc)                # 2 # bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->kids[0]->value * bnode->kids[1]->value, bnode->kids[0]->reg, bnode->reg); freereg(bnode->kids[0]->reg); freereg(bnode->kids[1]->reg); printf("\timul %%%s, %%%s\n", bnode->kids[1]->reg, bnode->reg);
 expr:     etc                             # 1 # { if(bnode->value == 1) { bnode->value = 0; } else { char* tmp = bnode->reg; bnode->reg = newreg(); printf("\timul $%li, %%%s, %%%s\n", bnode->value, tmp, bnode->reg); bnode->value = 0; } }
 
-call:    OP_Call(OP_ID, exprs)             # 0 # save_regs(); bnode->reg = newreg(); set_params(bnode->kids[1]); call_func(bnode->kids[0]->name); printf("\tmovq %%rax, %%%s\n", bnode->reg); freereg(bnode->reg); restore_regs(); claimreg(bnode->reg);
+call:    OP_Call(OP_ID, exprs)             # 0 # save_regs(); set_params(bnode->kids[1]); call_func(bnode->kids[0]->name); bnode->reg = newreg(); printf("\tmovq %%rax, %%%s\n", bnode->reg); freereg(bnode->reg); restore_regs(); claimreg(bnode->reg);
 
 call:    OP_Call(OP_ID, OP_NOP)           # 0 # save_regs(); bnode->reg = newreg(); call_func(bnode->kids[0]->name); printf("\tmovq %%rax, %%%s\n", bnode->reg); freereg(bnode->reg); restore_regs(); claimreg(bnode->reg);
 

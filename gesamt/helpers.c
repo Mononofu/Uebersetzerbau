@@ -316,13 +316,22 @@ void save_regs() {
   }
 }
 
+int saved_reg_offset(char* name) {
+  int i = 8;
+  int num = 0;
+
+  while( strcmp(reg, regs[i]) != 0 ) {
+    if(reg_usage[i] != 0)
+      ++num;
+    --i;
+  }
+}
+
 void set_params(treenode* node) {
   printf("/* set params */\n");
   treenode* cur = node;
   treenode* expr;
   int num_params = 1;
-  int stack_ctr = 1;
-
   /* count params */
   while(cur->op == OP_Args) {
     num_params += 1;
@@ -334,12 +343,12 @@ void set_params(treenode* node) {
   while(cur->op == OP_Args) {
     expr = cur->kids[1];
     /* use values from stack to set param regs */
-    printf("\tmovq -%d(%%rbp), %%%s\n", 8*stack_ctr++, param_regs[--num_params]);
+    printf("\tmovq -%d(%%rbp), %%%s\n", 8*saved_reg_offset(expr->reg), param_regs[--num_params]);
 
     cur = cur->kids[0];
   }
 
-  printf("\tmovq -%d(%%rbp), %%%s\n", 8*stack_ctr, param_regs[--num_params]);
+  printf("\tmovq -%d(%%rbp), %%%s\n", 8*saved_reg_offset(expr->reg), param_regs[--num_params]);
 
 }
 
