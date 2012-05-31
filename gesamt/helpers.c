@@ -339,7 +339,7 @@ void set_params(treenode* node) {
     cur = cur->kids[0];
   }
 
-  printf("\tmovq -%d(%%rbp), %%%s\n", stack_ctr, param_regs[--num_params]);
+  printf("\tmovq -%d(%%rbp), %%%s\n", 8*stack_ctr, param_regs[--num_params]);
 
 }
 
