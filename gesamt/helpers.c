@@ -320,7 +320,7 @@ int saved_reg_offset(char* name) {
   int i = 8;
   int num = 0;
 
-  while( strcmp(reg, regs[i]) != 0 ) {
+  while( strcmp(name, regs[i]) != 0 ) {
     if(reg_usage[i] != 0)
       ++num;
     --i;
