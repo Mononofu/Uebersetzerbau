@@ -44,6 +44,7 @@ void dump_usage();
 
 /* function call helpers */
 void save_regs();
+void set_params(treenode* node);
 void call_func(char* name);
 void restore_regs();
 

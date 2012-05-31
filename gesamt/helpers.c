@@ -310,6 +310,31 @@ void save_regs() {
   }
 }
 
+void set_params(treenode* node) {
+  treenode* cur = node;
+  treenode* expr;
+  int num_params = 1;
+
+  /* count params */
+  while(cur->op == OP_Args) {
+    num_params += 1;
+    cur = cur->kids[0];
+  }
+
+  cur = node;
+
+  while(cur->op == OP_Args) {
+    expr = cur->kids[1];
+    printf("\tmovq %%%s, %%%s\n", expr->reg, param_regs[--num_params]);
+
+    cur = cur->kids[0];
+  }
+  
+  expr = cur->kids[1];
+  printf("\tmovq %%%s, %%%s\n", expr->reg, param_regs[--num_params]);
+
+}
+
 void call_func(char* name) {
   printf("/* call %s */\n", name);
   printf("\tcall %s\n", name);
