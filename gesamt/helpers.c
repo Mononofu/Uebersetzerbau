@@ -331,8 +331,7 @@ void set_params(treenode* node) {
     cur = cur->kids[0];
   }
 
-  expr = cur->kids[1];
-  printf("\tmovq %%%s, %%%s\n", expr->reg, param_regs[--num_params]);
+  printf("\tmovq %%%s, %%%s\n", cur->reg, param_regs[--num_params]);
 
 }
 
