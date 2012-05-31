@@ -350,7 +350,7 @@ void set_params(treenode* node) {
     cur = cur->kids[0];
   }
 
-  printf("\tmovq -%d(%%rbp), %%%s\n", 8*(1+saved_reg_offset(expr->reg)), param_regs[--num_params]);
+  printf("\tmovq -%d(%%rbp), %%%s\n", 8*(1+saved_reg_offset(cur->reg)), param_regs[--num_params]);
 
 }
 
