@@ -325,6 +325,8 @@ int saved_reg_offset(char* name) {
       ++num;
     --i;
   }
+
+  return num;
 }
 
 void set_params(treenode* node) {
