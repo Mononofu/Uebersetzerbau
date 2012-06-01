@@ -47,5 +47,6 @@ void save_regs();
 void set_params(treenode* node);
 void call_func(char* name);
 void restore_regs();
+void free_params(treenode* node);
 
 #endif

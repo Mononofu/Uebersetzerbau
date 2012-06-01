@@ -372,3 +372,16 @@ void restore_regs() {
 
   printf("/************** end of function ***************/\n");
 }
+
+
+void free_params(treenode* node) {
+  treenode* cur = node;
+
+  while(cur->op == OP_Args) {
+    freereg(cur->kids[1]->reg);
+    cur = cur->kids[0];
+  }
+
+  freereg(cur->reg);
+
+}
