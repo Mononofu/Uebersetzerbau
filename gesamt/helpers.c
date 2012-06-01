@@ -370,7 +370,7 @@ void restore_regs() {
   }
 
 
-  printf("/************** end of function ***************/\n");
+  printf("/*************** end of function ***************/\n");
 }
 
 
@@ -383,5 +383,4 @@ void free_params(treenode* node) {
   }
 
   freereg(cur->reg);
-
 }
