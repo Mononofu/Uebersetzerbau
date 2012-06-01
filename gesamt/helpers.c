@@ -307,7 +307,7 @@ void init_reg_usage() {
 
 /* function call helpers */
 void save_regs() {
-  printf("/************** start of function **************/\n");
+  printf("/************** start of function call **************/\n");
   int i;
   printf("/* save registers */\n");
   for(i = 0; i < 9; ++i) {
@@ -370,7 +370,7 @@ void restore_regs() {
   }
 
 
-  printf("/*************** end of function ***************/\n");
+  printf("/*************** end of function call ***************/\n");
 }
 
 
